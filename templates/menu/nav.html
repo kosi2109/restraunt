@@ -1,0 +1,50 @@
+<div class="nav sticky-top">
+              <h4>Order Something</h4>
+              
+                <form method="POST" class="search" action="{% url 'menu:search' %}">
+                  {% csrf_token %}
+                    <input type="text" name="searched" value="{{data}}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                
+              
+              {% if user.is_authenticated %}
+                <div class="btn-container">
+                  
+                  <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
+                </div>
+                
+              
+              {% else %}
+                <div class="btn-container">
+                  <button class="login"><a href="{% url 'menu:userLogin' %}">Login</a> </button>
+                  <button><a href="{% url 'menu:registerPage' %}" style="text-decoration: none;color: #252525;">SignUp</a></button>
+                </div>
+              {% endif %}
+              
+              <div class="burger">
+                <h5 id="burger"><i class="fas fa-shopping-cart"></i><h6 class="quantity">{{current_order.get_order_qty}}</h6></h5>
+              </div>
+              <div class="cart" id="cart">
+                <h4>My Order({{request.user.muser}})</h4>
+                <div class="ordered">
+                  {% for i in order_item %}
+                  <div class="ordered-item">
+                    <div class="ordered-img">
+                      <img src="{{i.item.image.url}}" alt="">
+                    </div>
+                    <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
+                    <h5 class="sub-total">${{i.get_sub_total}}</h5>
+                  </div>
+                  {% endfor %}
+                  
+                </div>
+                <div class="total">
+                  <h5>Total</h5>
+                  <h5>${{current_order.get_order_total}}</h5>
+                </div>
+                {% if current_order != None %}
+                <button class="checkout"><a href="{% url 'menu:checkout' current_order.slug %}">Checkout</a> </button>
+                {% endif %}
+              </div>
+</div>

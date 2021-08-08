@@ -1,0 +1,30 @@
+{% extends 'menu/base.html' %}
+
+{% block content %}
+
+<div class="loginform">
+	<div>
+		<h1>SignUp</h1>
+		<form method="POST">
+			{% csrf_token %}
+			{{form.username}}
+			{{form.email}}
+			{{form.first_name}}
+			{{form.last_name}}
+			<input type="text" name="phone" placeholder="Phone">
+			<textarea name="address" placeholder="Address" class="form-control"></textarea>
+			{{form.password1}}
+			{{form.password2}}
+			<button type="submit" class="mb-5">Signup</button>
+			<h6 class="text-right"><a href="{% url 'menu:userLogin' %}" >Login</a></h6>
+		</form>
+	</div>
+	
+</div>
+
+
+{% endblock %}
+
+
+
+

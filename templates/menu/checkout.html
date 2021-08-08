@@ -1,0 +1,38 @@
+{% extends 'menu/base.html' %}
+{% load static %}
+{% block content %}
+
+    
+      <div class="receipt">
+        <h3 class="text-center">Nyein</h3>
+        <div class="receipt-header">
+          <div class="receipt-address">
+            <h5>{{request.user.muser}}</h5>
+            <h6>{{request.user.muser.email}}</h6>
+            <h6>{{request.user.muser.phone}}</h6>
+            <h6>{{request.user.muser.address}}</h6>
+          </div>
+          <div class="receipt-detail">
+            <h6>Receipt({{order.order_id}})</h6>
+          </div>
+        </div>
+        <div class="receipt-body">
+          <div class="receipt-item"><h6>No.</h6> <h6 class="receipt-item-name text-left">Name</h6> <h6>Price</h6> <h6>Q</h6> <h6>Total</h6></div>
+          {% for i in item %}
+          <div class="receipt-item"><h6 >{{forloop.counter}}</h6> <h6 class="receipt-item-name text-left">{{i.item.name}}</h6> <h6>{{i.item.price}}</h6> <h6>{{i.quatity}}</h6> <h6>{{i.get_sub_total}}</h6></div>
+          {% endfor %}
+          <div class="receipt-item receipt-total"><h5>Grand Total</h5> <h5>{{order.get_order_total}}Ks</h5></div>
+        </div>
+        <h5 class="text-center">Thank For Purchase</h5>
+        <form method="POST" class="receipt-choice">
+        {% csrf_token %}
+        
+        <button type="submit">Checkout</button>
+        <button type="button"><a href="{% url 'menu:menu' %}">Home</a></button>
+        </form>
+      </div>
+      
+      
+      
+    
+{% endblock %}

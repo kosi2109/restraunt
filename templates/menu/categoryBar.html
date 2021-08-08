@@ -1,0 +1,15 @@
+{% load static %}
+<div class="category-item">
+    <a href="{% url 'menu:menu' %}" style="display: block;text-decoration: none;color: #252525;">
+    <img src="{% static 'image/—Pngtree—vector cartoon illustration of a_3565698.png' %}" alt="">
+    <p class="text-center">All</p>
+    </a>
+</div>
+    {% for i in category %}
+<div class="category-item">
+    <a href="{% url 'menu:category' i.slug %}" style="display: block;text-decoration: none;color: #252525;">
+    <img src="{% static 'image/—Pngtree—vector cartoon illustration of a_3565698.png' %}" alt="">
+    <p class="text-center">{{i.name}}</p>
+    </a>
+</div>
+{% endfor %}
