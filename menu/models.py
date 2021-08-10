@@ -1,12 +1,15 @@
 from django.db import models
 import uuid
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,AbstractUser,AbstractBaseUser,PermissionsMixin
 from datetime import date
 from datetime import datetime
 from django.utils import timezone
 
+class UserNew(AbstractUser):
+	is_table = models.BooleanField(default=False)
+
 class MUser(models.Model):
-	user = models.OneToOneField(User,on_delete=models.CASCADE)
+	user = models.OneToOneField(UserNew,on_delete=models.CASCADE)
 	F_Name = models.CharField(max_length=50,null=True)
 	L_Name = models.CharField(max_length=50,null=True)
 	email = models.CharField(max_length=100,null=True)
@@ -17,6 +20,7 @@ class MUser(models.Model):
 		return f"{self.F_Name} {self.L_Name}"
 
 class Category(models.Model):
+	image = models.ImageField(upload_to='category/',default='category/category.png')
 	name = models.CharField(max_length=100,null=True)
 	slug = models.SlugField(null=True,blank=True,unique=True,editable=False)
 
@@ -73,35 +77,31 @@ class Menu(models.Model):
 
 
 class Order(models.Model):
+	STATUS_CHOICE = (
+		('Cooking','Cooking'),
+		('Delivering','Delivering'),
+		('Delivered','Delivered')
+		)
 	user = models.ForeignKey(MUser, on_delete=models.CASCADE)
-	order_date = models.DateField(default=datetime.now())
-	order_time = models.TimeField(default=datetime.now())
+	order_date = models.DateField(blank=True,null=True)
+	order_time = models.TimeField(blank=True,null=True)
 	order_id = models.CharField(max_length=100,null=True,blank=True)
 	slug = models.SlugField(max_length=50,null=True,unique=True,editable=True,blank=True)
 	ckecked = models.BooleanField(default=False,null=True)
-
+	status 	= models.CharField(max_length=20,choices= STATUS_CHOICE,blank=True,default='Cooking',null=True)
 
 
 	def save(self,*args,**kwargs):
 		
 		if not self.order_id:
-			last_order = list(Order.objects.all())
 			counter = 1
-			if len(last_order) > 0:
-				if last_order[-1].order_date == datetime.now().date():
-					counter = 2
-					self.order_id = counter
-					while Order.objects.filter(order_id=self.order_id).exists():
-						self.order_id = counter
-						counter += 1
-
-				else:
-					self.order_id = counter
-			else:
-				self.order_id = counter
+			self.order_id = f'O_{counter}'
+			while Order.objects.filter(order_id=self.order_id).exists():
+				counter += 1
+				self.order_id = f'O_{counter}'
 
 		if not self.slug:
-			self.slug = f'{self.order_id}_{self.order_date.day}_{self.order_date.month}_{self.order_date.year}'
+			self.slug = self.order_id
 		super().save(*args,**kwargs)
 
 	@property
@@ -127,6 +127,7 @@ class OrderItem(models.Model):
 	order = models.ForeignKey(Order,on_delete=models.CASCADE)
 	item = models.ForeignKey(Menu,on_delete=models.PROTECT)
 	quatity = models.IntegerField(default=1)
+	cooked = models.BooleanField(default=False,null=True)
 
 	@property
 	def get_sub_total(self):

@@ -13,7 +13,7 @@
             <div class="menu-container mt-3 py-4">
               <div class="row">
                 {% for i in menu %}
-                <div class="col-md-3 mb-3">
+                <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-3">
                   <div class="menu-item">
                     <div class="menu-img">
                       <img src="{{i.image.url}}" alt="">
@@ -42,9 +42,27 @@
 
       var btn = document.getElementById("burger");
       var cart = document.getElementById("cart");
+      
+      active = localStorage.getItem('active')
+      if (active == 'active'){
+        cart.classList.add(active);
+      }else{
+        cart.classList.remove('active');
+      }
+      
 
       btn.addEventListener("click", () => {
-        cart.classList.toggle("active");
+        active = localStorage.getItem('active')
+        if (active == 'active'){
+          localStorage.setItem('active', 'unactive');
+          active = localStorage.getItem('active')
+          cart.classList.remove('active');
+        }else{
+          localStorage.setItem('active', 'active');
+          active = localStorage.getItem('active')
+          cart.classList.add(active);
+        }
+        
       });
      var updateBtns = document.getElementsByClassName('add-btn')
 
@@ -52,8 +70,6 @@
         updateBtns[i].addEventListener('click',function(){
           var menuSlug = this.dataset.slug
           var action = this.dataset.action
-          console.log(menuSlug)
-          console.log(action)
           cookOrder(menuSlug,action)
         })
       }
@@ -84,6 +100,22 @@
         })
       }
       
+    </script>
+    {% else %}
+    <script type="text/javascript">
+      var btn = document.getElementById("burger");
+      var cart = document.getElementById("cart");
+
+      btn.addEventListener("click", () => {
+        window.alert('Create Account To Make An Order')
+      });
+     var updateBtns = document.getElementsByClassName('add-btn')
+
+      for (var i=0; i< updateBtns.length; i++){
+        updateBtns[i].addEventListener('click',function(){
+          window.alert('Create Account To Make An Order')
+        })
+      }
     </script>
     {% endif %}
 {% endblock %}

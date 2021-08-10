@@ -7,10 +7,15 @@
         <h3 class="text-center">Nyein</h3>
         <div class="receipt-header">
           <div class="receipt-address">
+            {% if not request.user.is_table %}
             <h5>{{request.user.muser}}</h5>
             <h6>{{request.user.muser.email}}</h6>
             <h6>{{request.user.muser.phone}}</h6>
             <h6>{{request.user.muser.address}}</h6>
+            {% endif %}
+            {% if request.user.is_table %}
+            <h5>{{request.user.table}}</h5>
+            {% endif %}
           </div>
           <div class="receipt-detail">
             <h6>Receipt({{order.order_id}})</h6>

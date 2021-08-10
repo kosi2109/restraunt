@@ -1,0 +1,54 @@
+{% extends 'menu/base.html' %}
+{% load static %}
+
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+
+<div class="tableReq">
+	   <h2>Scan Qr To Order</h2>
+    <div class="scan-container">
+      <video id="preview"></video>
+    </div>
+    <h3>Nyein Food And Beverage</h3>
+    <form method="POST" style="display:none;" action="{% url 'menu:userLogin' %}">
+      {% csrf_token %}
+      <input type="text" id="username" name="username" placeholder="Username">
+      <input type="password" id="password" name="password" placeholder="Password">
+      <input type="submit" name="" id="tablesubmit">
+    </form>
+</div>
+<script type="text/javascript">
+      var videoId = document.getElementById('preview')
+      var scanner = new Instascan.Scanner({ video: videoId });
+      Instascan.Camera.getCameras().then(function (cameras) {
+           
+          if (cameras.length > 0) {
+            scanner.start(cameras[0])
+          } else {
+            window.alert("No camera found")
+          }
+          }).catch(function (e) {
+          console.error(e);
+          });
+
+
+          scanner.addListener('scan', function (content) {
+            const obj = JSON.parse(content);
+            console.log(obj)
+            const username = obj.username
+            const passwords = obj.password
+            console.log(username)
+            console.log(passwords)
+            const name = document.getElementById('username')
+            const password = document.getElementById('password')
+            if (content){
+              scanner.stop();
+              name.value = username;
+              password.value = passwords;
+              document.getElementById("tablesubmit").click();
+            }
+          });
+</script>
+
+{% endblock %}

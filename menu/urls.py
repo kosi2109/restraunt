@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import *
-app_name = 'menu'
+app_name = 'menu' 
 
 urlpatterns =[
 	path('signup/',registerPage ,name='registerPage'),
@@ -12,4 +12,6 @@ urlpatterns =[
 	path('checkout/<slug:slug>',checkout ,name='checkout'),
 	path('menu/<slug:slug>/',category ,name='category'),
 	path('search/',search ,name='search'),
+	path('jointable/',jointable ,name='jointable'),
+	path('orderHistory/',orderHistory ,name='orderHistory'),
 ]

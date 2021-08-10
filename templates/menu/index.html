@@ -1,7 +1,7 @@
 {% extends 'menu/base.html' %}
 {% load static %}
 {% block content %}
-    <main id="swup" class="transation-fade">
+    <main style="background-color: #98d79e;">
       <div class="container-fluid home">
         <h1 class="logo">Nyein Food & Beverage</h1>
         <svg
@@ -47,11 +47,14 @@
           <div class="col-md-6 p-0 m-0">
             <div class="left">
               <div class="hero">
-                <h2 class="text-center">Just Order And Relax</h2>
+                
                 <div
-                  class="d-flex justify-content-around align-items-center"
-                  style="width: 100%"
+                  class="d-flex justify-content-around align-items-center px-3"
+                  style="width: 100%;"
                 >
+                <div class="row mt-5 mt-md-0">
+                  <h2 class="text-center mb-3 chill">Just Order And Relax</h2>
+                  <div class="col-12 col-md-6 mb-4 mb-md-0 d-flex justify-content-center align-items-center">
                   <div class="order">
                     <h5 class="py-3"><a href="{% url 'menu:menu' %}">Order</a></h5>
                     <div class="order-img">
@@ -61,8 +64,10 @@
                       />
                     </div>
                   </div>
-                  <div class="table">
-                    <h5 class="py-3"><a href="{% url 'menu:menu' %}">Table</a></h5>
+                  </div>
+                  <div class="col-12 col-md-6 d-flex justify-content-around align-items-center">
+                  <div class="table-order">
+                    <h5 class="py-3"><a href="{% url 'menu:jointable' %}">Table</a></h5>
                     <div class="table-img">
                       <img
                         src="{% static 'image/Lovers_couple_eating_together_Happy_valentine_cartoon_character_illustration_Premium_Vector.jpg' %}"
@@ -70,8 +75,11 @@
                       />
                     </div>
                   </div>
+                  </div>
+
                 </div>
-                <button class="menu-btn"><a href="{% url 'menu:menu' %}">Menu</a></button>
+                </div>
+               
               </div>
             </div>
           </div>
