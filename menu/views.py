@@ -208,6 +208,8 @@ def handleOrder(request):
 						item.delete()
 					
 			else:
+				menuSlug = data['menuSlug']
+				item = Menu.objects.get(slug=menuSlug)
 				new = Order.objects.create(user=user)
 				OrderItem.objects.create(order=new,item=item)
 

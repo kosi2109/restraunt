@@ -128,7 +128,13 @@ class OrderItem(models.Model):
 	item = models.ForeignKey(Menu,on_delete=models.PROTECT)
 	quatity = models.IntegerField(default=1)
 	cooked = models.BooleanField(default=False,null=True)
+	slug = models.SlugField(max_length=50,null=True,unique=True,editable=True,blank=True)
 
+	def save(self,*args,**kwargs):
+		if not self.slug:
+			self.slug = uuid.uuid4()
+		super().save(*args,**kwargs)
+		
 	@property
 	def get_sub_total(self):
 		return self.item.price * self.quatity
