@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}" />
+    <script type="text/javascript">
+    
+      function getCookie(name) {
+          let cookieValue = null;
+          if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let i = 0; i < cookies.length; i++) {
+                  const cookie = cookies[i].trim();
+                  // Does this cookie string begin with the name we want?
+                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                      break;
+                  }
+              }
+          }
+          return cookieValue;
+      }
+      const csrftoken = getCookie('csrftoken');
+      
+    </script>
+    <title>Dashboard</title>
+  </head>
+  <body class="bg-light position-relative">
+    <div class="container-fluid hero p-0 m-0">
+      <div class="row subhero p-0 m-0">
+        <div class="col-0 col-md-2 main-select p-0 m-0 bg-dark">
+          <div class="select">
+            <ul class="nav-links">
+              <li>
+                <a href="index.html"><h3>Nyein</h3></a>
+              </li>
+              <li {% if nav == 'home' %} class="active" {% endif %}><a  href="{% url 'owner:home' %}">Home</a></li>
+              <li {% if nav == 'order' %} class="active" {% endif %}><a href="{% url 'owner:order' %}">Orders</a></li>
+              <li {% if nav == 'menu' %} class="active" {% endif %}><a href="{% url 'owner:menu' %}">Menu</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-12 col-md-10 p-4">
+          {% block content %}
+
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

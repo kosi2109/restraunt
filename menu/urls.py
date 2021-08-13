@@ -14,4 +14,5 @@ urlpatterns =[
 	path('search/',search ,name='search'),
 	path('jointable/',jointable ,name='jointable'),
 	path('orderHistory/',orderHistory ,name='orderHistory'),
+	path('handlestatus/',handlestatus ,name='handlestatus'),
 ]

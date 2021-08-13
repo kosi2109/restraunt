@@ -4,14 +4,15 @@ from datetime import date
 from django.http import JsonResponse
 import json
 from django.utils import timezone
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth import authenticate, login, logout
 from datetime import datetime
 from table.models import *
+from django.contrib.auth.forms import UserCreationForm
+from owner.views import BestMenu
 class CreateUserForm(UserCreationForm):
 	class Meta:
-		model = User
+		model = UserNew
 		fields = ['username','email','first_name','last_name','password1','password2']
 		widgets = {
 			'username': forms.TextInput(attrs={'id':'username','placeholder':'Username'}),
@@ -57,7 +58,12 @@ def userLogin(request):
 		user = authenticate(request,username=username,password=password)
 		if user is not None:
 			login(request,user)
+			if request.user.is_table:
+				logout(request)
+				return redirect('menu:userLogin')
 			return redirect('menu:menu')
+			
+				
 		else:
 			return redirect('menu:userLogin')
 
@@ -73,12 +79,14 @@ def home(request):
 def menu(request):
 	category = Category.objects.all()
 	menu = Menu.objects.all()
+	bestselling = BestMenu.get_best_item
 	if request.user.is_authenticated:
-		if not request.user.is_table:
+		if request.user.is_user:
 			user = request.user.muser
 			order = list(user.order_set.all())
 			if len(order) > 0:
-				last_order = order[0]
+				last_order = order[-1]
+
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.orderitem_set.all()
@@ -91,11 +99,11 @@ def menu(request):
 				current_order = None
 				order_item = []
 				cart_item = []
-		else:
+		elif request.user.is_table:
 			user = request.user.table
 			order = list(user.tableorder_set.all())
 			if len(order) > 0:
-				last_order = order[0]
+				last_order = order[-1]
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.tableorderitem_set.filter(ordered=True)
@@ -105,6 +113,10 @@ def menu(request):
 					order_item = []
 					cart_item = []
 			else:
+				current_order = None
+				order_item = []
+				cart_item = []
+		else:
 				current_order = None
 				order_item = []
 				cart_item = []
@@ -116,20 +128,19 @@ def menu(request):
 
 	
 
-	ctx = {'menu':menu,'category':category,'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
-	return render(request , 'menu/menu.html',ctx)
+	ctx = {'menu':menu,'bestselling':bestselling,'category':category,'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
+	return render(request,'menu/menu.html',ctx)
 
 def category(request,slug):
 	category = Category.objects.all()
 	ct = Category.objects.get(slug=slug)
 	menu = Menu.objects.filter(category=ct)
 	if request.user.is_authenticated:
-		if not request.user.is_table:
+		if request.user.is_user:
 			user = request.user.muser
 			order = list(user.order_set.all())
 			if len(order) > 0:
-				last_order = order[0]
-				print(last_order)
+				last_order = order[-1]
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.orderitem_set.all()
@@ -142,11 +153,11 @@ def category(request,slug):
 				current_order = None
 				order_item = []
 				cart_item = []
-		else:
+		elif request.user.is_table:
 			user = request.user.table
 			order = list(user.tableorder_set.all())
 			if len(order) > 0:
-				last_order = order[0]
+				last_order = order[-1]
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.tableorderitem_set.filter(ordered=True)
@@ -156,6 +167,10 @@ def category(request,slug):
 					order_item = []
 					cart_item = []
 			else:
+				current_order = None
+				order_item = []
+				cart_item = []
+		else:
 				current_order = None
 				order_item = []
 				cart_item = []
@@ -172,17 +187,19 @@ def category(request,slug):
 
 def handleOrder(request):
 	if request.user.is_authenticated:
-		if not request.user.is_table:
+		if request.user.is_user:
 			user = request.user.muser
 			order = list(user.order_set.all())
 			data = json.loads(request.body)
 			action = data['action']
 			if len(order) > 0 :
-				last_order = order[0]
+				last_order = order[-1]
 				if action == 'add':
 					menuSlug = data['menuSlug']
 					item = Menu.objects.get(slug=menuSlug)
+					print(last_order.ckecked)
 					if last_order.ckecked == False:
+						print('Not checked')
 						if OrderItem.objects.filter(order=last_order,item=item).exists():
 							ordered_item = OrderItem.objects.get(order=last_order,item=item)
 							ordered_item.quatity += 1
@@ -190,6 +207,7 @@ def handleOrder(request):
 						else:
 							OrderItem.objects.create(order=last_order,item=item)
 					else:
+						print('checked')
 						new = Order.objects.create(user=user)
 						OrderItem.objects.create(order=new,item=item)
 
@@ -213,7 +231,7 @@ def handleOrder(request):
 				new = Order.objects.create(user=user)
 				OrderItem.objects.create(order=new,item=item)
 
-		else:
+		elif request.user.is_table:
 			user = request.user.table
 			order = list(user.tableorder_set.all())
 			data = json.loads(request.body)
@@ -221,7 +239,7 @@ def handleOrder(request):
 			action = data['action']
 			
 			if len(order) > 0 :
-				last_order = order[0]
+				last_order = order[-1]
 				if action == 'add':
 					menuSlug = data['menuSlug']
 					item = Menu.objects.get(slug=menuSlug)
@@ -237,26 +255,9 @@ def handleOrder(request):
 						TableOrderItem.objects.create(order=new,item=item)
 				if action == 'comfirm':
 					not_ordered = TableOrderItem.objects.filter(order=last_order,ordered=False)
-					ordered = TableOrderItem.objects.filter(order=last_order,ordered=True)
-					if len(ordered) > 0:
-						for i in not_ordered:
-							for j in ordered:
-								print(i,j,'sadasd')
-								if i.item.slug == j.item.slug:
-									j.quatity += i.quatity
-									j.save()
-									i.delete()
-									
-
-						not_ordered = TableOrderItem.objects.filter(order=last_order,ordered=False)
-						for i in not_ordered:
-							i.ordered = True
-							i.save()
-
-					else:
-						for i in not_ordered:
-							i.ordered = True
-							i.save()
+					for i in not_ordered:
+						i.ordered = True
+						i.save()		
 
 				if action == 'increase':
 					menuSlug = data['menuSlug']
@@ -280,7 +281,7 @@ def handleOrder(request):
 	return JsonResponse(data)
 
 def checkout(request,slug):
-	if not request.user.is_table:
+	if request.user.is_user:
 		user = request.user.muser
 		order = Order.objects.get(user=user,slug=slug)
 		item = order.orderitem_set.all()
@@ -292,18 +293,23 @@ def checkout(request,slug):
 			order.save()
 			return redirect('menu:menu')
 		
-	else:
+	elif request.user.is_table:
 		user = request.user.table
 		order = TableOrder.objects.get(user=user,slug=slug)
-		item = order.tableorderitem_set.filter(ordered=True)
+		item = order.tableorderitem_set.filter(ordered=True,cooked=True)
+		not_order = order.tableorderitem_set.filter(ordered=False)
 		if request.method == 'POST':
-			
+			for i in not_order:
+				i.delete()
 			order.order_date = datetime.now().date()
 			order.order_time = datetime.now().time()
 			order.ckecked = True
 			order.save()
 			logout(request)
 			return redirect('menu:menu')
+	else:
+		order = None
+		item = []
 
 	ctx = {'order':order,'item':item}
 	return render(request , 'menu/checkout.html',ctx)
@@ -314,11 +320,11 @@ def search(request):
 	menu = Menu.objects.all()
 	
 	if request.user.is_authenticated:
-		if not request.user.is_table:
+		if request.user.is_user:
 			user = request.user.muser
 			order = list(user.order_set.all())
 			if len(order) > 0:
-				last_order = order[0]
+				last_order = order[-1]
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.orderitem_set.all()
@@ -331,11 +337,11 @@ def search(request):
 				current_order = None
 				order_item = []
 				cart_item = []
-		else:
+		elif request.user.is_table:
 			user = request.user.table
 			order = list(user.tableorder_set.all())
 			if len(order) > 0:
-				last_order = order[0]
+				last_order = order[-1]
 				if last_order.ckecked == False:
 					current_order = last_order
 					order_item = current_order.tableorderitem_set.filter(ordered=True)
@@ -348,6 +354,10 @@ def search(request):
 				current_order = None
 				order_item = []
 				cart_item = []
+		else:
+			current_order = None
+			order_item = []
+			cart_item = []
 	else:
 		order = []
 		current_order = None
@@ -368,7 +378,7 @@ def search(request):
 
 
 def orderHistory(request):
-	if not request.user.is_table:
+	if request.user.is_user:
 		user = request.user.muser
 		order = Order.objects.filter(user=user,ckecked=True)
 		totalorder = len(order)
@@ -377,5 +387,26 @@ def orderHistory(request):
 
 
 def jointable(request):
+	if request.method == 'POST' or None:
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(request,username=username,password=password)
+		if user is not None:
+			login(request,user)
+			return redirect('menu:menu')
+		else:
+			return redirect('menu:userLogin')
 
 	return render(request,'menu/tableRequest.html')
+
+
+def handlestatus(request):
+	user = request.user.table
+	order = list(user.tableorder_set.all())
+	if len(order) > 0:
+		last_order = order[-1]
+		if last_order.ckecked == False:
+			current_order = last_order
+			order_item = current_order.tableorderitem_set.filter(ordered=True)
+			data = list(order_item.values())
+			return JsonResponse(data,safe=False)

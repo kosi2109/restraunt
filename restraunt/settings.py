@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'menu',
     'table',
+    'owner',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

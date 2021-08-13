@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('menu.urls',namespace='menu')),
     path('chef/',include('chef.urls',namespace='chef')),
+    path('owner/',include('owner.urls',namespace='owner')),
 ]
 
 if settings.DEBUG:

@@ -1,4 +1,5 @@
 {% load static %}
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <div class="nav sticky-top">
     <div class="menu-burger" id="menu-burger">
       <div></div>
@@ -17,17 +18,22 @@
     
         
     {% if user.is_authenticated %}
-      {% if not request.user.is_table %}
+      {% if request.user.is_user %}
       <div class="btn-container">
                     
       <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
       <button><a href="{% url 'menu:orderHistory' %}" style="text-decoration: none;color: #252525;">History</a></button>
       </div>
-      {% else %}
+      {% elif request.user.is_table %}
 
       <div class="btn-container">
                     
       <button class="login">{{request.user.table}}</button>
+      </div>
+      {% else %}
+      <div class="btn-container">
+                    
+      <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
       </div>
       {% endif %}    
                 
@@ -49,16 +55,21 @@
       
     </form>
     {% if user.is_authenticated %}
-        {% if not request.user.is_table %}
+        {% if request.user.is_user %}
         <div class="btn-container-mobile">
                       
         <button class="login-mobile"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
         <button><a href="{% url 'menu:orderHistory' %}" style="text-decoration: none;color: #252525;">History</a></button>
         </div>
-        {% else %}
+        {% elif request.user.is_table %}
          <div class="btn-container">
                     
         <button class="login-mobile">{{request.user.table}}</button>
+        </div>
+        {% else %}
+        <div class="btn-container">
+                      
+        <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
         </div>
         {% endif %}     
                   
@@ -71,7 +82,7 @@
 
   </div>
   <div class="cart" id="cart">
-    {% if not request.user.is_table %}
+    {% if request.user.is_user %}
       <h4>My Order({{request.user.muser}})</h4>
       <div class="ordered">
           {% for i in order_item %}
@@ -94,15 +105,15 @@
       <button class="checkout"><a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a> </button>
       {% endif %}
 
-    {% else %}
+    {% elif request.user.table %}
       <h4>{{request.user.table}}</h4>
       <div class="ordered">
           <h6>Ordered</h6>
           {% for i in order_item %}
           <div class="ordered-item">
              
-            <div class="ordered-img">
-              {% if i.cooked == True %} <i class="far fa-check-circle" style="color: #2eba41;"></i> {% else %} <i class="fas fa-spinner spining"></i> {% endif %}
+            <div class="ordered-img{{i.id}}">
+              
             </div>
             <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
             <h5 class="sub-total">${{i.get_sub_total}}</h5>
@@ -130,6 +141,8 @@
       <button class="add-btn checkout" data-action='comfirm' >Order Selected Items</button>
       <button class="checkout"><a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a> </button>
       {% endif %}
+    {% else %}
+    
     {% endif %}
   </div>
 <script type="text/javascript">
@@ -139,4 +152,43 @@
     mobileNav.classList.toggle('navactive')
   })
 </script>
+
+{% if request.user.is_table %}
+<script type="text/javascript">
+  $(document).ready(function(){
+
+  setInterval(function(){
+    $.ajax({
+    type: 'GET',
+    url : "{% url 'menu:handlestatus' %}",
+    success: function(response){
+      for (var key in response){
+
+        var id = '.ordered-img'+response[key].id
+        $(""+id).empty();
+        const temp = `<i class="far fa-check-circle" style="color: #2eba41;"></i>` 
+        const temp2 = `<i class="fas fa-spinner spining"></i>`
+        if (response[key].cooked == false){
+          $(""+id).append(temp2);
+        }
+        else{
+          $(""+id).append(temp);
+        }
+          
+        
+        
+        }
+      
+      
+        
+        
+          },
+    error: function(response){
+            console.log(response)
+        }
+    });
+  },10000);
+  })
+</script>
+{% endif %}
 </div>

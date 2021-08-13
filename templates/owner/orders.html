@@ -1,0 +1,169 @@
+{% extends 'owner/base.html' %}
+
+{% block content %}
+
+ <div class="row">
+            <div class="col-md-12">
+              <div
+                class="most-order bg-white shadow p-3 mb-5"
+                style="border-radius: 10px"
+              >
+                <h3>Active Order</h3>
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Order Id</th>
+                      <th scope="col">Order By</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  	{% for i in activeorders %}
+                    <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{i.order_id}}</td>
+                      <td>{{i.user.F_Name}} {{i.user.L_Name}}</td>
+                      <td>{{i.user.phone}}</td>
+                      <td>{{i.user.address}}</td>
+                      <td>
+                        <select class="form-control status" data-order='{{i.slug}}'>
+                          
+                          <option {% if i.status == "Cooking" %} disabled selected  {% endif %} value="Cooking">Cooking</option>
+                          <option {% if i.status == "Delivering" %} disabled selected  {% endif %} value="Delivering">Delivering</option>
+                          <option {% if i.status == "Delivered" %} disabled selected  {% endif %} value="Delivered">Delivered</option>
+                        </select>
+                      </td>
+                    </tr>
+              		{% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div
+                class="most-order bg-white shadow p-3 mb-5"
+                style="border-radius: 10px"
+              >
+                <div
+                  class="
+                    search-order
+                    d-flex
+                    justify-content-between
+                    align-items-center
+                  "
+                >
+                  <h3>Today Order(Delivered)</h3>
+                  
+                    <button class="btn btn-outline-success" type="button" data-bs-toggle="modal" data-bs-target="#filterorder">
+                      Search Order
+                    </button>
+                 
+                </div>
+
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Order Id</th>
+                      <th scope="col">Order By</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in allorders %}
+                    <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{i.order_id}}</td>
+                      <td>{{i.user.F_Name}} {{i.user.L_Name}}</td>
+                      <td>{{i.user.phone}}</td>
+                      <td>{{i.user.address}}</td>
+                      <td>
+                        {% if i.status %}
+                        <select class="form-control status" data-order='{{i.slug}}'>
+                          
+                          <option {% if i.status == "Cooking" %} disabled selected  {% endif %} value="Cooking">Cooking</option>
+                          <option {% if i.status == "Delivering" %} disabled selected  {% endif %} value="Delivering">Delivering</option>
+                          <option {% if i.status == "Delivered" %} disabled selected  {% endif %} value="Delivered">Delivered</option>
+                        </select>
+                        {% endif %}
+                      </td>
+                    </tr>
+              		{% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="filterorder" tabindex="-1" aria-labelledby="filterorder" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="filterorder">Search Order(Blank will be all)</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method='GET' action="{% url 'owner:filterorder' %}">
+                    {% csrf_token %}
+                    {{filterform.form.order_id}}
+                    <label>From</label>
+                    {{filterform.form.order_date__gt}}
+                    <label>To</label>
+                    {{filterform.form.order_date__lt}}
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Search</button>
+                  </form>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+
+
+<script type="text/javascript">
+  const statuses = document.querySelectorAll('.status')
+  statuses.forEach(status=>{
+    status.addEventListener('change',()=>{
+      order = status.dataset.order
+      value = status.value
+      console.log(order)
+      console.log(value)
+      handleStatus(order,value)
+    })
+  })
+
+
+function handleStatus(order,value){
+        console.log('sendind daata')
+        var url = '{% url 'owner:statusControl' %}'
+
+
+        fetch(url , {
+          method:'POST',
+          headers:{
+            'Content-Type':'application/json',
+            'X-CSRFToken': csrftoken,
+          },
+          body:JSON.stringify({'order': order, 'value' : value})
+        })
+
+        .then((response) => {
+          return response.json()
+        })
+
+        .then((data) => {
+          location.reload();
+          
+          
+        })
+      }
+</script>
+{% endblock %}

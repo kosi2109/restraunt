@@ -51,10 +51,6 @@ class TableOrder(models.Model):
 		return total
 
 
-	class Meta:
-		verbose_name_plural = 'Orders'
-		ordering = ('-order_time',)
-
 
 class TableOrderItem(models.Model):
 	order = models.ForeignKey(TableOrder,on_delete=models.CASCADE)

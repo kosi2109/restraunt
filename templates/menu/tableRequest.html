@@ -11,7 +11,7 @@
       <video id="preview"></video>
     </div>
     <h3>Nyein Food And Beverage</h3>
-    <form method="POST" style="display:none;" action="{% url 'menu:userLogin' %}">
+    <form method="POST" style="display:none;">
       {% csrf_token %}
       <input type="text" id="username" name="username" placeholder="Username">
       <input type="password" id="password" name="password" placeholder="Password">

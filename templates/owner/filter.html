@@ -1,0 +1,44 @@
+{% extends 'owner/base.html' %}
+{% block content %}
+<div class="row">
+	<div class="col-12">
+		<table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Order Id</th>
+                      <th scope="col">Order By</th>
+                      <th scope="col">Phone</th>
+                      <th scope="col">Address</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Date</th>
+                      <th scope="col">Time</th>
+                      <th scope="col">Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in order %}
+                    <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                      <td>{{i.order_id}}</td>
+                      <td>{{i.user.F_Name}} {{i.user.L_Name}}</td>
+                      <td>{{i.user.phone}}</td>
+                      <td>{{i.user.address}}</td>
+                      <td>
+                        {% if i.status %}
+                        {{i.status}}
+                        {% endif %}
+                      </td>
+                      <td>{{i.order_date}}</td>
+                      <td>{{i.order_time}}</td>
+                      <td>{{i.get_order_total}}</td>
+                    </tr>
+              		{% endfor %}
+                  </tbody>
+                </table>
+	</div>
+</div>
+
+
+
+{% endblock %}

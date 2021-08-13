@@ -7,6 +7,8 @@ from django.utils import timezone
 
 class UserNew(AbstractUser):
 	is_table = models.BooleanField(default=False)
+	is_user = models.BooleanField(default=True)
+	is_chef = models.BooleanField(default=False)
 
 class MUser(models.Model):
 	user = models.OneToOneField(UserNew,on_delete=models.CASCADE)
@@ -16,17 +18,32 @@ class MUser(models.Model):
 	phone = models.CharField(max_length=100,null=True)
 	address = models.TextField(blank=False)
 
+	@property 
+	def get_total_spend(self):
+		orders = self.order_set.all()
+		total = 0 
+		for order in orders:
+			total += order.get_order_total
+		return total
+
+	@property 
+	def get_total_order(self):
+		orders = self.order_set.count()
+		
+		return orders
+
+
 	def __str__(self):
 		return f"{self.F_Name} {self.L_Name}"
 
 class Category(models.Model):
-	image = models.ImageField(upload_to='category/',default='category/category.png')
+	image = models.ImageField(upload_to='category/',default='category/category.png',blank=True)
 	name = models.CharField(max_length=100,null=True)
-	slug = models.SlugField(null=True,blank=True,unique=True,editable=False)
+	slug = models.SlugField(null=True,blank=True,unique=True)
 
 	def save(self,*args,**kwargs):
 		if not self.slug:
-			name = self.name.split()
+			name = self.name.split(" ")
 			name = ''.join(name)
 			self.slug = f"c_{name.lower()}"
 			count = 1
@@ -37,6 +54,17 @@ class Category(models.Model):
 
 	def __str__(self):
 		return self.name
+
+	@property
+	def get_total_selling(self):
+		menu  = self.menu_set.all()
+		total = 0
+		for i in menu:
+			for k in i.orderitem_set.all():
+				total += k.quatity
+			for k in i.tableorderitem_set.all():
+				total += k.quatity
+		return total
 
 	class Meta:
 		verbose_name_plural = 'Categories'
@@ -54,12 +82,12 @@ class Menu(models.Model):
 	name = models.CharField(max_length=100,null=True)
 	size = models.CharField(max_length=20,choices= SIZE_CHOICE,blank=True)
 	price = models.IntegerField()
-	slug = models.SlugField(max_length=50,unique=True,null=True,blank=True,editable=False)
+	slug = models.SlugField(max_length=50,unique=True,null=True,blank=True)
 	image = models.ImageField(upload_to='menu/')
 
 	def save(self,*args,**kwargs):
 		if not self.slug:
-			name = self.name.split()
+			name = self.name.split(' ')
 			name = ''.join(name)
 			self.slug = f"m_{name.lower()}"
 			count = 1
@@ -74,6 +102,18 @@ class Menu(models.Model):
 	class Meta:
 		verbose_name_plural = 'Menus'
 		ordering = ('name',)
+
+	@property
+	def get_total_selling(self):
+		orderitem  = self.orderitem_set.all()
+		tableorder = self.tableorderitem_set.all()
+		total = 0
+		for i in orderitem:
+			total += i.quatity
+		for i in tableorder:
+			total += i.quatity
+		return total
+
 
 
 class Order(models.Model):
@@ -118,9 +158,7 @@ class Order(models.Model):
 		return total
 
 
-	class Meta:
-		verbose_name_plural = 'Orders'
-		ordering = ('-order_time',)
+	
 
 
 class OrderItem(models.Model):

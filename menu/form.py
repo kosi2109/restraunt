@@ -4,10 +4,10 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = UserNew
-        fields = ('username','is_table')
+        fields = ('username','is_table','is_user','is_chef')
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta(UserChangeForm):
         model = UserNew
-        fields = ('username','is_table')
+        fields = ('username','is_table','is_user','is_chef')

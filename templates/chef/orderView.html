@@ -82,8 +82,8 @@
 			    <td>`+response.data[key].order_by+`</td>
 			    <td>`+response.data[key].order_item+`</td>
 			    <td>`+response.data[key].quantity+`</td>
-			    <td><button class="btn btn-primary btn-sm chefCon" data-action='cooked' data-id=`+ response.data[key].slug+ `>Done</button></td>
-			    <td><button class="btn btn-danger btn-sm chefCon" data-action='cancelcook' data-id=`+ response.data[key].slug+`>Cancel</button></td>  
+			    <td><button class="btn btn-primary btn-sm chefCon" data-action='cooked' data-id=`+ response.data[key].slug+ ` data-table=` + response.data[key].order_id + `>Done</button></td>
+			    <td><button class="btn btn-danger btn-sm chefCon" data-action='cancelcook' data-id=`+ response.data[key].slug+` data-table=`	+ response.data[key].order_id + `>Cancel</button></td>  
 			    </tr>`
 				$("#some").append(temp);
 				}
@@ -92,8 +92,9 @@
 		        updateBtns[i].addEventListener('click',function(){
 		          var id = this.dataset.id
 		          var action = this.dataset.action
-		       
-		          cookOrder(id,action)
+		       		var table = this.dataset.table
+		       		console.log(table)
+		          cookOrder(id,action,table)
 		        })
 		      }
 				
@@ -102,10 +103,10 @@
 					  console.log(response)
 				}
 		});
-	},10000);
+	},1000);
 	})
 
-function cookOrder(menuSlug,action){
+function cookOrder(menuSlug,action,table){
         console.log('sendind daata')
         var url = '{% url 'chef:cookControl' %}'
 
@@ -116,7 +117,7 @@ function cookOrder(menuSlug,action){
             'Content-Type':'application/json',
             'X-CSRFToken': csrftoken,
           },
-          body:JSON.stringify({'cook_id': menuSlug, 'action' : action})
+          body:JSON.stringify({'cook_id': menuSlug, 'action' : action,'table':table})
         })
 
         .then((response) => {
