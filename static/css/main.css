@@ -334,7 +334,7 @@ body {
 }
 
 .category-item {
-  width: 70px;
+  min-width: 70px;
   height: 80px;
   display: flex;
   justify-content: space-between;
@@ -521,8 +521,8 @@ body {
 }
 
 .category{
-  overflow-x: scroll;
-  width: 100%;
+  overflow-x: auto;
+  min-width: 100%;
 }
 
 .category::-webkit-scrollbar {
