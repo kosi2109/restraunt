@@ -1,1 +1,1 @@
-web: gunicorn school.wsgi
+web: gunicorn restraunt.wsgi
