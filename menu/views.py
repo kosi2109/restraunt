@@ -10,6 +10,12 @@ from datetime import datetime
 from table.models import *
 from django.contrib.auth.forms import UserCreationForm
 from owner.views import BestMenu
+from owner.decorators import *
+from django.contrib.auth.decorators import login_required
+
+
+
+
 class CreateUserForm(UserCreationForm):
 	class Meta:
 		model = UserNew
@@ -23,6 +29,7 @@ class CreateUserForm(UserCreationForm):
 			'last_name': forms.TextInput(attrs={'placeholder':'Last Name'}),
 		}
 
+@unauthenticated_user
 def registerPage(request):
 	form = CreateUserForm()
 
@@ -50,7 +57,7 @@ def registerPage(request):
 	return render(request,'menu/signup.html',ctx)
 
 
-
+@unauthenticated_user
 def userLogin(request):
 	if request.method == 'POST' or None:
 		username = request.POST.get('username')
@@ -61,9 +68,10 @@ def userLogin(request):
 			if request.user.is_table:
 				logout(request)
 				return redirect('menu:userLogin')
-			return redirect('menu:menu')
-			
-				
+			elif request.user.is_superuser:
+				return redirect('owner:home')
+			else:
+				return redirect('menu:menu')	
 		else:
 			return redirect('menu:userLogin')
 
@@ -280,6 +288,7 @@ def handleOrder(request):
 	
 	return JsonResponse(data)
 
+@login_required(login_url='menu:login')
 def checkout(request,slug):
 	if request.user.is_user:
 		user = request.user.muser
@@ -376,11 +385,11 @@ def search(request):
 		ctx = {'category':category,'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
 		return render(request,'menu/search.html',ctx)
 
-
+@login_required(login_url='menu:login')
 def orderHistory(request):
 	if request.user.is_user:
 		user = request.user.muser
-		order = Order.objects.filter(user=user,ckecked=True)
+		order = Order.objects.filter(user=user,ckecked=True).order_by('-order_date')
 		totalorder = len(order)
 		ctx = {'order':order,'totalorder':totalorder,'user':user}
 		return render(request,'menu/history.html',ctx)

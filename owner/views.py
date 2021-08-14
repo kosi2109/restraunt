@@ -9,6 +9,9 @@ from .forms import *
 from django.http import JsonResponse
 import json
 from .filters import OrderFilter,MenuFilter
+from .decorators import *
+from django.contrib.auth.decorators import login_required
+
 
 class Sales:
 	def __init__(self,order,table):
@@ -121,7 +124,8 @@ class BestMenu():
 		return most_order_cate
 		
 
-
+@admin_only
+@login_required(login_url='menu:login')
 def home(request):
 	sale = Sales(Order,TableOrder)
 	year = sale.yearSale()
@@ -137,6 +141,8 @@ def home(request):
 	ctx = {'sales':sales,'most_order':most_order,'most_spent':most_spent,'most_order_item':most_order_item,'most_order_cate':most_order_cate,'nav':'home'}
 	return render(request,'owner/index.html',ctx)
 
+@admin_only
+@login_required(login_url='menu:login')
 def order(request):
 	filterform = OrderFilter()
 	today = datetime.now().date()
@@ -162,6 +168,8 @@ def order(request):
 	ctx = {'allorders':allorders,'activeorders':activeorders,'filterform':filterform,'nav':'order'}
 	return render(request,'owner/orders.html',ctx)
 
+@admin_only
+@login_required(login_url='menu:login')
 def menu(request):
 	category = Category.objects.all()
 	menu = Menu.objects.all()
@@ -181,7 +189,8 @@ def menu(request):
 	ctx ={'category':category,'menu':menu,'menuform':menuform,'menufilter':menufilter,'nav':'menu'}
 	return render(request,'owner/menu.html',ctx)
 
-
+@admin_only
+@login_required(login_url='menu:login')
 def addcategory(request):
 	if request.method == "POST":
 		name = request.POST.get('category')
@@ -190,6 +199,9 @@ def addcategory(request):
 
 	return redirect('owner:menu')
 
+
+@admin_only
+@login_required(login_url='menu:login')
 def menuDelete(request,slug):
 	item = Menu.objects.get(slug=slug)
 	if request.method == "POST":
@@ -197,6 +209,10 @@ def menuDelete(request,slug):
 		return redirect('owner:menu')
 	return render(request,'owner/delete.html',{'item':item,'nav':'menu'})
 
+
+
+@admin_only
+@login_required(login_url='menu:login')
 def cateDelete(request,slug):
 	item = Category.objects.get(slug=slug)
 	if request.method == "POST":
@@ -205,6 +221,9 @@ def cateDelete(request,slug):
 	return render(request,'owner/delete.html',{'item':item,'nav':'menu'})
 
 
+
+@admin_only
+@login_required(login_url='menu:login')
 def statusControl(request):
 	data = json.loads(request.body)
 	orderSlug = data['order']
@@ -219,6 +238,8 @@ def statusControl(request):
 	return JsonResponse(data)
 
 
+@admin_only
+@login_required(login_url='menu:login')
 def filterorder(request):
 	order = Order.objects.all()
 	filterform = OrderFilter(request.GET,queryset=order)

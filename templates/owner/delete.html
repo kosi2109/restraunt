@@ -1,10 +1,9 @@
-{% extends 'owner/base.html' %}
-
+{% extends 'owner/base.html' %} 
 {% block content %}
 <form method="POST">
-	{% csrf_token %}
-	<h2>Are You Sure to delete {{item}} !</h2>
-	<a href="{% url 'owner:menu' %}" class="btn btn-sm btn-warning">Back</a>
-	<button type="submit" class="btn btn-sm btn-danger">Delete</button>
+  {% csrf_token %}
+  <h2>Are You Sure to delete {{item}} !</h2>
+  <a href="{% url 'owner:menu' %}" class="btn btn-sm btn-warning">Back</a>
+  <button type="submit" class="btn btn-sm btn-danger">Delete</button>
 </form>
 {% endblock %}

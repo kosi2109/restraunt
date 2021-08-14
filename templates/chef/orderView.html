@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8" />
+  <head>
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- CSS only -->
@@ -11,126 +11,132 @@
       integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <!-- JavaScript Bundle with Popper -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj"
       crossorigin="anonymous"
     ></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-	<title></title>
-</head>
-<body>
-<script type="text/javascript">
-    
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <title></title>
+  </head>
+  <body>
+    <script type="text/javascript">
       function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-              const cookies = document.cookie.split(';');
-              for (let i = 0; i < cookies.length; i++) {
-                  const cookie = cookies[i].trim();
-                  // Does this cookie string begin with the name we want?
-                  if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                      cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                      break;
-                  }
-              }
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
           }
-          return cookieValue;
+        }
+        return cookieValue;
       }
-      const csrftoken = getCookie('csrftoken');
-      
-</script>
-<div class="container">
-<table class="table p-5" style="width:100%;">
-	<thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">OrderBy</th>
-      <th scope="col">Name</th>
-      <th scope="col">Q</th>
-      <th scope="col"></th>
-      <th scope="col"></th>
-    </tr>
-  	</thead>
-	<tbody style="width:100%;" id="some">
-		<tr style="width:100%;">
-			<td colspan="6" style="text-align: center;">
-				Loading...
-			</td>
-		</tr>
-	</tbody>
-</table>	
-</div>
+      const csrftoken = getCookie("csrftoken");
+    </script>
+    <div class="container">
+      <table class="table p-5" style="width: 100%">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">OrderBy</th>
+            <th scope="col">Name</th>
+            <th scope="col">Q</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody style="width: 100%" id="some">
+          <tr style="width: 100%">
+            <td colspan="6" style="text-align: center">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script type="text/javascript">
+      	$(document).ready(function(){
+
+      	setInterval(function(){
+      		$.ajax({
+      		type: 'GET',
+      		url : "{% url 'chef:getOrders' %}",
+      		success: function(response){
+      			$("#some").empty();
+      			for (var key in response.data){
+      				var no = parseInt(key)+1
+      				var temp = `
+      				<tr style="width:100%;">
+      			    <td>`+ no +`</td>
+      			    <td>`+response.data[key].order_by+`</td>
+      			    <td>`+response.data[key].order_item+`</td>
+      			    <td>`+response.data[key].quantity+`</td>
+      			    <td><button class="btn btn-primary btn-sm chefCon" data-action='cooked' data-id=`+ response.data[key].slug+ ` data-table=` + response.data[key].order_id + `>Done</button></td>
+      			    <td><button class="btn btn-danger btn-sm chefCon" data-action='cancelcook' data-id=`+ response.data[key].slug+` data-table=`	+ response.data[key].order_id + `>Cancel</button></td>
+      			    </tr>`
+      				$("#some").append(temp);
+      				}
+      				var updateBtns = document.getElementsByClassName('chefCon')
+      				for (var i=0; i< updateBtns.length; i++){
+      		        updateBtns[i].addEventListener('click',function(){
+      		          var id = this.dataset.id
+      		          var action = this.dataset.action
+      		       		var table = this.dataset.table
+      		       		console.log(table)
+      		          cookOrder(id,action,table)
+      		        })
+      		      }
+
+      			},
+      		error: function(response){
+      					  console.log(response)
+      				}
+      		});
+      	},1000);
+      	})
+
+      function cookOrder(menuSlug,action,table){
+              console.log('sendind daata')
+              var url = '{% url 'chef:cookControl' %}'
 
 
-<script type="text/javascript">
-	$(document).ready(function(){
+              fetch(url , {
+                method:'POST',
+                headers:{
+                  'Content-Type':'application/json',
+                  'X-CSRFToken': csrftoken,
+                },
+                body:JSON.stringify({'cook_id': menuSlug, 'action' : action,'table':table})
+              })
 
-	setInterval(function(){
-		$.ajax({
-		type: 'GET',
-		url : "{% url 'chef:getOrders' %}",
-		success: function(response){
-			$("#some").empty();
-			for (var key in response.data){
-				var no = parseInt(key)+1
-				var temp = `
-				<tr style="width:100%;">
-			    <td>`+ no +`</td>
-			    <td>`+response.data[key].order_by+`</td>
-			    <td>`+response.data[key].order_item+`</td>
-			    <td>`+response.data[key].quantity+`</td>
-			    <td><button class="btn btn-primary btn-sm chefCon" data-action='cooked' data-id=`+ response.data[key].slug+ ` data-table=` + response.data[key].order_id + `>Done</button></td>
-			    <td><button class="btn btn-danger btn-sm chefCon" data-action='cancelcook' data-id=`+ response.data[key].slug+` data-table=`	+ response.data[key].order_id + `>Cancel</button></td>  
-			    </tr>`
-				$("#some").append(temp);
-				}
-				var updateBtns = document.getElementsByClassName('chefCon')
-				for (var i=0; i< updateBtns.length; i++){
-		        updateBtns[i].addEventListener('click',function(){
-		          var id = this.dataset.id
-		          var action = this.dataset.action
-		       		var table = this.dataset.table
-		       		console.log(table)
-		          cookOrder(id,action,table)
-		        })
-		      }
-				
-			},
-		error: function(response){
-					  console.log(response)
-				}
-		});
-	},1000);
-	})
+              .then((response) => {
+                return response.json()
+              })
 
-function cookOrder(menuSlug,action,table){
-        console.log('sendind daata')
-        var url = '{% url 'chef:cookControl' %}'
+              .then((data) => {
+                location.reload();
 
 
-        fetch(url , {
-          method:'POST',
-          headers:{
-            'Content-Type':'application/json',
-            'X-CSRFToken': csrftoken,
-          },
-          body:JSON.stringify({'cook_id': menuSlug, 'action' : action,'table':table})
-        })
-
-        .then((response) => {
-          return response.json()
-        })
-
-        .then((data) => {
-          location.reload();
-          
-          
-        })
-      }
-</script>
-
-</body>
+              })
+            }
+    </script>
+  </body>
 </html>

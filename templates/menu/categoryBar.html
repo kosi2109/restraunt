@@ -1,20 +1,28 @@
 {% load static %}
 <div class="category-item">
-    <a href="{% url 'menu:menu' %}" style="display: block;text-decoration: none;color: #252525;">
+  <a
+    href="{% url 'menu:menu' %}"
+    style="display: block; text-decoration: none; color: #252525"
+  >
     <div class="ct-img-container">
-        <img src="{% static 'image/—Pngtree—vector cartoon illustration of a_3565698.png' %}" alt="">
+      <img
+        src="{% static 'image/—Pngtree—vector cartoon illustration of a_3565698.png' %}"
+        alt=""
+      />
     </div>
     <h6 class="text-center">All</h6>
-    </a>
+  </a>
 </div>
 {% for i in category %}
 <div class="category-item">
-    <a href="{% url 'menu:category' i.slug %}" style="display: block;text-decoration: none;color: #252525;">
+  <a
+    href="{% url 'menu:category' i.slug %}"
+    style="display: block; text-decoration: none; color: #252525"
+  >
     <div class="ct-img-container">
-        <img src="{{ i.image.url }}" alt="">
+      <img src="{{ i.image.url }}" alt="" />
     </div>
     <h6 class="text-center">{{i.name|slice:":6"}}</h6>
-
-    </a>
+  </a>
 </div>
 {% endfor %}

@@ -1,157 +1,202 @@
-{% extends 'owner/base.html' %}
-
+{% extends 'owner/base.html' %} 
 {% block content %}
 <div class="row">
-            <div class="col-md-3 mb-3">
-              <div
-                class="most-order bg-white shadow p-3 sticky-top"
-                style="border-radius: 10px"
+  <div class="col-md-3 mb-3">
+    <div
+      class="most-order bg-white shadow p-3 sticky-top"
+      style="border-radius: 10px"
+    >
+      <div
+        class="search-order d-flex justify-content-between align-items-center"
+      >
+        <h3>Menu</h3>
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#category"
+        >
+          Add
+        </button>
+      </div>
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            {% for i in category %}
+            <td>{{i.name}}</td>
+            <td>
+              <a
+                href="{% url 'owner:cateDelete' i.slug %}"
+                class="btn btn-sm btn-danger"
+                >Delete</a
               >
-                <div
-                  class="
-                    search-order
-                    d-flex
-                    justify-content-between
-                    align-items-center
-                  "
-                >
-                  <h3>Menu</h3>
-                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#category">
-                    Add
-                  </button>
-                </div>
-                <table class="table table-borderless">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {% for i in category %}
-                      <td>{{i.name}}</td>
-                      <td>
-                         <a href="{% url 'owner:cateDelete' i.slug %}" class="btn btn-sm btn-danger">Delete</a>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="col-md-9">
-              <div
-                class="most-order bg-white shadow p-3"
-                style="border-radius: 10px"
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-9">
+    <div class="most-order bg-white shadow p-3" style="border-radius: 10px">
+      <div
+        class="search-order d-flex justify-content-between align-items-center"
+      >
+        <h3>Menu</h3>
+
+        <form
+          method="GET"
+          class="d-flex justify-content-center align-items-center"
+          style="height: 60px"
+        >
+          {% csrf_token %} 
+          {{menufilter.form.name}}
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <button
+          type="button"
+          class="btn btn-success"
+          data-bs-toggle="modal"
+          data-bs-target="#menu"
+        >
+          Add
+        </button>
+      </div>
+      <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Size</th>
+            <th scope="col">Price</th>
+            <th scope="col">Image</th>
+            <th scope="col">Catagory</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in menu %}
+          <tr>
+            <td>{{i.name}}</td>
+            <td>{{i.size}}</td>
+            <td>{{i.price}}</td>
+            <td>
+              <img src="{{i.image.url}}" style="width: 60px; height: 50px" />
+            </td>
+            <td>{% for c in i.category.all %} {{c.name}} {% endfor %}</td>
+            <td>
+              <a
+                href="{% url 'owner:menuDelete' i.slug %}"
+                class="btn btn-sm btn-danger"
+                >Delete</a
               >
-                <div
-                  class="
-                    search-order
-                    d-flex
-                    justify-content-between
-                    align-items-center
-                  "
-                >
-                  <h3>Menu</h3>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Button trigger modal -->
 
-                  <form method="GET" class="d-flex justify-content-center align-items-center" style="height: 60px;">
-                    {% csrf_token %}
-                    {{menufilter.form.name}}
-                    <button class="btn btn-outline-success" type="submit">
-                      Search
-                    </button>
-                    
-                  </form>
-                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#menu">
-                    Add
-                  </button>
-                </div>
-                <table class="table table-borderless">
-                  <thead>
-                    <tr>
-                      <th scope="col">Name</th>
-                      <th scope="col">Size</th>
-                      <th scope="col">Price</th>
-                      <th scope="col">Image</th>
-                      <th scope="col">Catagory</th>
-                      <th scope="col"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for i in menu %}
-                    <tr>
-                      <td>{{i.name}}</td>
-                      <td>{{i.size}}</td>
-                      <td>{{i.price}}</td>
-                      <td> <img src="{{i.image.url}}" style="width:60px;height: 50px;">   </td>
-                      <td>{% for c in i.category.all %} {{c.name}} {% endfor %}</td>
-                      <td>
-                        <a href="{% url 'owner:menuDelete' i.slug %}" class="btn btn-sm btn-danger">Delete</a>
-                       
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <!-- Button trigger modal -->
-          
-
-          <!-- Modal -->
-          <div class="modal fade" id="category" tabindex="-1" aria-labelledby="category" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="category">Category Form</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form method='POST' action="{% url 'owner:addcategory' %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="text" name="category" class="form-control mb-3" placeholder="Category Name">
-                    <input type="file" name="image" class="form-control mb-3" accept="image/*">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Add</button>
-                  </form>
-                </div>
-                
-              </div>
-            </div>
-          </div>
-          <!-- Add menu Modal -->
-          <div class="modal fade" id="menu" tabindex="-1" aria-labelledby="menu" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="menu">Menu Form</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form method='POST' enctype="multipart/form-data">
-                    {% csrf_token %}
-                      {{menuform.category}}
-                      {{menuform.name}}
-                      {{menuform.size}}
-                      {{menuform.price}}
-                      {{menuform.image}}
-                  <button type="submit" class="btn btn-primary mt-3">Add</button>
-                  </form>
-                </div>
-                
-              </div>
-            </div>
-          </div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="category"
+  tabindex="-1"
+  aria-labelledby="category"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="category">Category Form</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form
+          method="POST"
+          action="{% url 'owner:addcategory' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <input
+            type="text"
+            name="category"
+            class="form-control mb-3"
+            placeholder="Category Name"
+          />
+          <input
+            type="file"
+            name="image"
+            class="form-control mb-3"
+            accept="image/*"
+          />
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Add menu Modal -->
+<div
+  class="modal fade"
+  id="menu"
+  tabindex="-1"
+  aria-labelledby="menu"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="menu">Menu Form</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" enctype="multipart/form-data">
+          {% csrf_token %} 
+          {{menuform.category}} 
+          {{menuform.name}}
+          {{menuform.size}} 
+          {{menuform.price}} 
+          {{menuform.image}}
+          <button type="submit" class="btn btn-primary mt-3">Add</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
-  const multicb = document.querySelectorAll('#multicb input')
-  multicb.forEach(m=>{
-    m.classList.remove('form-control')
-    m.classList.add('form-check-input')
-  })
-  const multi =document.getElementById('multicb')
-  multi.style.listStyle = 'none';
+  const multicb = document.querySelectorAll("#multicb input");
+  multicb.forEach((m) => {
+    m.classList.remove("form-control");
+    m.classList.add("form-check-input");
+  });
+  const multi = document.getElementById("multicb");
+  multi.style.listStyle = "none";
 </script>
 {% endblock %}

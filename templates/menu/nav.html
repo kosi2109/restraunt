@@ -1,194 +1,271 @@
 {% load static %}
- <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"
+></script>
 <div class="nav sticky-top">
-    <div class="menu-burger" id="menu-burger">
-      <div></div>
-      <div></div>
-      <div></div>
-    </div>
-    
-    <h4>Order Something</h4>
-                
-    <form method="POST" class="search" action="{% url 'menu:search' %}">
-      {% csrf_token %}
-      <input type="text" name="searched" value="{{data}}">
-      <button type="submit"><i class="fas fa-search"></i></button>
-    </form>
-         
-    
-        
-    {% if user.is_authenticated %}
-      {% if request.user.is_user %}
-      <div class="btn-container">
-                    
-      <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
-      <button><a href="{% url 'menu:orderHistory' %}" style="text-decoration: none;color: #252525;">History</a></button>
-      </div>
-      {% elif request.user.is_table %}
+  <div class="menu-burger" id="menu-burger">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 
-      <div class="btn-container">
-                    
-      <button class="login">{{request.user.table}}</button>
-      </div>
-      {% else %}
-      <div class="btn-container">
-                    
-      <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
-      </div>
-      {% endif %}    
-                
-    {% else %}
-      <div class="btn-container">
-        <button class="login"><a href="{% url 'menu:userLogin' %}">Login</a> </button>
-        <button><a href="{% url 'menu:registerPage' %}" style="text-decoration: none;color: #252525;">SignUp</a></button>
-      </div>
-    {% endif %}     
-    <div class="burger">
-      <h5 id="burger"><i class="fas fa-shopping-cart"></i><h6 class="quantity">{{current_order.get_order_qty}}</h6></h5>
+  <h4>Order Something</h4>
+
+  <form method="POST" class="search" action="{% url 'menu:search' %}">
+    {% csrf_token %}
+    <input type="text" name="searched" value="{{data}}" />
+    <button type="submit"><i class="fas fa-search"></i></button>
+  </form>
+
+  {% if user.is_authenticated %} 
+    {% if request.user.is_user %}
+    <div class="btn-container">
+      <button class="login">
+        <a href="{% url 'menu:userLogout' %}">LogOut</a>
+      </button>
+      <button>
+        <a
+          href="{% url 'menu:orderHistory' %}"
+          style="text-decoration: none; color: #252525"
+          >History</a
+        >
+      </button>
     </div>
+    {% elif request.user.is_table %}
+
+    <div class="btn-container">
+      <button class="login">{{request.user.table}}</button>
+    </div>
+    {% else %}
+    <div class="btn-container">
+      <button class="login">
+        <a href="{% url 'menu:userLogout' %}">LogOut</a>
+      </button>
+    </div>
+    {% endif %} 
+  {% else %}
+  <div class="btn-container">
+    <button class="login">
+      <a href="{% url 'menu:userLogin' %}">Login</a>
+    </button>
+    <button>
+      <a
+        href="{% url 'menu:registerPage' %}"
+        style="text-decoration: none; color: #252525"
+        >SignUp</a
+      >
+    </button>
+  </div>
+  {% endif %}
+  <div class="burger">
+    <h5 id="burger">
+      <i class="fas fa-shopping-cart"></i>
+      <h6 class="quantity">{% if current_order.get_order_qty %}{{current_order.get_order_qty}} {% else %} 0 {% endif %}</h6>
+    </h5>
+  </div>
 
   <div class="mobile-nav" id="mobile-nav">
     <form method="POST" class="search-mobile" action="{% url 'menu:search' %}">
       {% csrf_token %}
-      <input type="text" name="searched" value="{{data}}">
+      <input type="text" name="searched" value="{{data}}" />
       <button type="submit"><i class="fas fa-search"></i></button>
-      
     </form>
-    {% if user.is_authenticated %}
-        {% if request.user.is_user %}
-        <div class="btn-container-mobile">
-                      
-        <button class="login-mobile"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
-        <button><a href="{% url 'menu:orderHistory' %}" style="text-decoration: none;color: #252525;">History</a></button>
-        </div>
-        {% elif request.user.is_table %}
-         <div class="btn-container">
-                    
+    {% if user.is_authenticated %} 
+      {% if request.user.is_user %}
+      <div class="btn-container-mobile">
+        <button class="login-mobile">
+          <a href="{% url 'menu:userLogout' %}">LogOut</a>
+        </button>
+        <button>
+          <a
+            href="{% url 'menu:orderHistory' %}"
+            style="text-decoration: none; color: #252525"
+            >History</a
+          >
+        </button>
+      </div>
+      {% elif request.user.is_table %}
+      <div class="btn-container">
         <button class="login-mobile">{{request.user.table}}</button>
-        </div>
-        {% else %}
-        <div class="btn-container">
-                      
-        <button class="login"><a href="{% url 'menu:userLogout' %}">LogOut</a> </button>
-        </div>
-        {% endif %}     
-                  
+      </div>
       {% else %}
-        <div class="btn-container-mobile">
-          <button class="login-mobile"><a href="{% url 'menu:userLogin' %}">Login</a> </button>
-          <button><a href="{% url 'menu:registerPage' %}" style="text-decoration: none;color: #252525;">SignUp</a></button>
-        </div>
+      <div class="btn-container">
+        <button class="login">
+          <a href="{% url 'menu:userLogout' %}">LogOut</a>
+        </button>
+      </div>
+      {% endif %} 
+    {% else %}
+    <div class="btn-container-mobile">
+      <button class="login-mobile">
+        <a href="{% url 'menu:userLogin' %}">Login</a>
+      </button>
+      <button>
+        <a
+          href="{% url 'menu:registerPage' %}"
+          style="text-decoration: none; color: #252525"
+          >SignUp</a
+        >
+      </button>
+    </div>
     {% endif %}
-
   </div>
   <div class="cart" id="cart">
     {% if request.user.is_user %}
       <h4>My Order({{request.user.muser}})</h4>
       <div class="ordered">
-          {% for i in order_item %}
-          <div class="ordered-item">
-            <div class="ordered-img">
-              <button class="add-btn" data-action='increase' data-slug='{{i.id}}'><img class="increase" src="{% static 'image/Up.png' %}"></button>
-              <button class="add-btn" data-action='decrease' data-slug='{{i.id}}'><img class="increase" src="{% static 'image/Down.png' %}"></button>
-            </div>
-            <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
-            <h5 class="sub-total">${{i.get_sub_total}}</h5>
+        {% for i in order_item %}
+        <div class="ordered-item">
+          <div class="ordered-img">
+            <button class="add-btn" data-action="increase" data-slug="{{i.id}}">
+              <img class="increase" src="{% static 'image/Up.png' %}" />
+            </button>
+            <button class="add-btn" data-action="decrease" data-slug="{{i.id}}">
+              <img class="increase" src="{% static 'image/Down.png' %}" />
+            </button>
           </div>
-          {% endfor %}
-                    
+          <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
+          <h5 class="sub-total">${{i.get_sub_total}}</h5>
+        </div>
+        {% endfor %}
       </div>
       <div class="total">
         <h5>Total</h5>
         <h5>${{current_order.get_order_total}}</h5>
       </div>
       {% if current_order != None %}
-      <button class="checkout"><a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a> </button>
-      {% endif %}
-
+      <button class="checkout">
+        <a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a>
+      </button>
+      {% endif %} 
     {% elif request.user.table %}
-      <h4>{{request.user.table}}</h4>
-      <div class="ordered">
-          <h6>Ordered</h6>
-          {% for i in order_item %}
-          <div class="ordered-item">
-             
-            <div class="ordered-img{{i.id}}">
-              
-            </div>
-            <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
-            <h5 class="sub-total">${{i.get_sub_total}}</h5>
-          </div>
-          {% endfor %}
+    <h4>{{request.user.table}}</h4>
+    <div class="ordered">
+      <h6>Ordered</h6>
+      {% for i in order_item %}
+      <div class="ordered-item">
+        <div class="ordered-img{{i.id}}"></div>
+        <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
+        <h5 class="sub-total">${{i.get_sub_total}}</h5>
+      </div>
+      {% endfor %}
 
-          <h6>Selected</h6>
-          {% for i in cart_item %}
-          <div class="ordered-item">
-            <div class="ordered-img">
-              <button class="add-btn" data-action='increase' data-slug='{{i.id}}'><img class="increase" src="{% static 'image/Up.png' %}"></button>
-              <button class="add-btn" data-action='decrease' data-slug='{{i.id}}'><img class="increase" src="{% static 'image/Down.png' %}"></button>
-            </div>
-            <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
-            <h5 class="sub-total">${{i.get_sub_total}}</h5>
-          </div>
-          {% endfor %}
-                    
+      <h6>Selected</h6>
+      {% for i in cart_item %}
+      <div class="ordered-item">
+        <div class="ordered-img">
+          <button class="add-btn" data-action="increase" data-slug="{{i.id}}">
+            <img class="increase" src="{% static 'image/Up.png' %}" />
+          </button>
+          <button class="add-btn" data-action="decrease" data-slug="{{i.id}}">
+            <img class="increase" src="{% static 'image/Down.png' %}" />
+          </button>
+        </div>
+        <h5 class="order-menu">{{i.quatity}} * {{i.item.name}}</h5>
+        <h5 class="sub-total">${{i.get_sub_total}}</h5>
       </div>
-      <div class="total">
-        <h5>Total</h5>
-        <h5>${{current_order.get_order_total}}</h5>
-      </div>
+      {% endfor %}
+    </div>
+    <div class="total">
+      <h5>Total</h5>
+      <h5>${{current_order.get_order_total}}</h5>
+    </div>
       {% if current_order != None %}
-      <button class="add-btn checkout" data-action='comfirm' >Order Selected Items</button>
-      <button class="checkout"><a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a> </button>
-      {% endif %}
+      <button class="add-btn checkout" data-action="comfirm">
+        Order Selected Items
+      </button>
+      <button class="checkout">
+        <a href="{% url 'menu:checkout' current_order.slug %}">Receipt</a>
+      </button>
+      {% endif %} 
     {% else %}
-    
+
     {% endif %}
   </div>
-<script type="text/javascript">
-  const menuBurger = document.getElementById('menu-burger')
-  const mobileNav = document.getElementById('mobile-nav')
-  menuBurger.addEventListener('click',()=>{
-    mobileNav.classList.toggle('navactive')
-  })
-</script>
+  
 
-{% if request.user.is_table %}
-<script type="text/javascript">
-  $(document).ready(function(){
 
-  setInterval(function(){
-    $.ajax({
-    type: 'GET',
-    url : "{% url 'menu:handlestatus' %}",
-    success: function(response){
-      for (var key in response){
-
-        var id = '.ordered-img'+response[key].id
-        $(""+id).empty();
-        const temp = `<i class="far fa-check-circle" style="color: #2eba41;"></i>` 
-        const temp2 = `<i class="fas fa-spinner spining"></i>`
-        if (response[key].cooked == false){
-          $(""+id).append(temp2);
-        }
-        else{
-          $(""+id).append(temp);
-        }
-          
-        
-        
-        }
-      
-      
-        
-        
+  {% if request.user.is_table %}
+  <script type="text/javascript">
+    $(document).ready(function () {
+      setInterval(function () {
+        $.ajax({
+          type: "GET",
+          url: "{% url 'menu:handlestatus' %}",
+          success: function (response) {
+            for (var key in response) {
+              var id = ".ordered-img" + response[key].id;
+              $("" + id).empty();
+              const temp = `<i class="far fa-check-circle" style="color: #2eba41;"></i>`;
+              const temp2 = `<i class="fas fa-spinner spining"></i>`;
+              if (response[key].cooked == false) {
+                $("" + id).append(temp2);
+              } else {
+                $("" + id).append(temp);
+              }
+            }
           },
-    error: function(response){
-            console.log(response)
-        }
+          error: function (response) {
+            console.log(response);
+          },
+        });
+      }, 10000);
     });
-  },10000);
-  })
+  </script>
+  {% endif %}
+
+{% if request.user.is_authenticated %}
+<script type="text/javascript">
+var btn = document.getElementById("burger");
+var cart = document.getElementById("cart");
+
+var active = localStorage.getItem('active')
+if (active == 'active'){
+    cart.classList.add(active);
+}else{
+    cart.classList.remove('active');
+}
+      
+
+btn.addEventListener("click", () => {
+    active = localStorage.getItem('active')
+    if (active == 'active'){
+      localStorage.setItem('active', 'unactive');
+      active = localStorage.getItem('active')
+      cart.classList.remove('active');
+    }else{
+      localStorage.setItem('active', 'active');
+      active = localStorage.getItem('active')
+      cart.classList.add(active);
+    }
+        
+  });
 </script>
+
+{% else %}
+    <script type="text/javascript">
+      var btn = document.getElementById("burger");
+      var cart = document.getElementById("cart");
+
+      btn.addEventListener("click", () => {
+        window.alert('Create Account To Make An Order')
+      });
+     var updateBtns = document.getElementsByClassName('add-btn')
+
+      for (var i=0; i< updateBtns.length; i++){
+        updateBtns[i].addEventListener('click',function(){
+          window.alert('Create Account To Make An Order')
+        })
+      }
+    </script>
 {% endif %}
+<script type="text/javascript">
+const menuBurger = document.getElementById("menu-burger");
+const mobileNav = document.getElementById("mobile-nav");
+menuBurger.addEventListener("click", () => {
+    mobileNav.classList.toggle("navactive");
+});
+</script>
 </div>

@@ -1,43 +1,67 @@
-{% extends 'menu/base.html' %}
-{% load static %}
+{% extends 'menu/base.html' %} 
+{% load static %} 
 {% block content %}
 
+<div class="row">
+  <div class="col-lg-3">
     
-      <div class="receipt">
-        <h3 class="text-center">Nyein</h3>
-        <div class="receipt-header">
-          <div class="receipt-address">
-            {% if not request.user.is_table %}
-            <h5>{{request.user.muser}}</h5>
-            <h6>{{request.user.muser.email}}</h6>
-            <h6>{{request.user.muser.phone}}</h6>
-            <h6>{{request.user.muser.address}}</h6>
-            {% endif %}
-            {% if request.user.is_table %}
-            <h5>{{request.user.table}}</h5>
-            {% endif %}
-          </div>
-          <div class="receipt-detail">
-            <h6>Receipt({{order.order_id}})</h6>
-          </div>
-        </div>
-        <div class="receipt-body">
-          <div class="receipt-item"><h6>No.</h6> <h6 class="receipt-item-name text-left">Name</h6> <h6>Price</h6> <h6>Q</h6> <h6>Total</h6></div>
-          {% for i in item %}
-          <div class="receipt-item"><h6 >{{forloop.counter}}</h6> <h6 class="receipt-item-name text-left">{{i.item.name}}</h6> <h6>{{i.item.price}}</h6> <h6>{{i.quatity}}</h6> <h6>{{i.get_sub_total}}</h6></div>
-          {% endfor %}
-          <div class="receipt-item receipt-total"><h5>Grand Total</h5> <h5>{{order.get_order_total}}Ks</h5></div>
-        </div>
-        <h5 class="text-center">Thank For Purchase</h5>
-        <form method="POST" class="receipt-choice">
-        {% csrf_token %}
-        
-        <button type="submit">Checkout</button>
-        <button type="button"><a href="{% url 'menu:menu' %}">Home</a></button>
-        </form>
+  </div>
+  <div class="col-lg-6 p-4 p-md-0">
+    <div class="m-0 p-3 bg-light shadow mt-3" style="width:100%;">
+      <h2 class="text-center">Nyein</h2>
+      <div class="mb-3">
+        {% if not request.user.is_table %}
+        <h5>{{request.user.muser}}</h5>
+        <h6>{{request.user.muser.email}}</h6>
+        <h6>{{request.user.muser.phone}}</h6>
+        <h6>{{request.user.muser.address}}</h6>
+        <h6>Receipt({{order.order_id}})</h6>
+        {% endif %} 
+        {% if request.user.is_table %}
+        <h5>{{request.user.table}}</h5>
+        <h6>Receipt({{order.order_id}})</h6>
+        {% endif %}
       </div>
+      <table class="table table-success table-striped">
+        <thead>
+          <tr>
+            <td>#</td>
+            <td>Name</td>
+            <td>Price</td>
+            <td>Q</td>
+            <td>Total</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in item %}
+          <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{i.item.name}}</td>
+            <td>{{i.item.price}}</td>
+            <td>{{i.quatity}}</td>
+            <td>{{i.get_sub_total}}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="4" class="text-center" style="font-weight: 450;font-size: 1.2rem;">Grand Total</td>
+            <td style="font-weight: 450;font-size: 1.2rem;">{{order.get_order_total}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <form method="POST" style="height:40px;display: flex;justify-content: flex-end;align-items: center;">
+      {% csrf_token %}
+
       
-      
-      
+      <button type="button" class="btn btn-sm btn-danger" style="height:40px"><a href="{% url 'menu:menu' %}" style="text-decoration:none;color: #fafafa;">Home</a></button>
+      <button type="submit" class="btn btn-sm btn-success ms-3" style="height:40px">Checkout</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-3">
     
+  </div>
+</div>
+
+
+
 {% endblock %}

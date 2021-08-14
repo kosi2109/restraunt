@@ -1,62 +1,71 @@
-{% extends 'menu/base.html' %}
-{% load static %}
+{% extends 'menu/base.html' %} 
+{% load static %} 
 {% block content %}
-    <main style="background-color: #98d79e;">
-      <div class="container-fluid home">
-        <h1 class="logo">Nyein Food & Beverage</h1>
-        <svg
-          width="109"
-          height="143"
-          viewBox="0 0 109 143"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="cycle-right"
-        >
-          <circle cx="99.5" cy="43.5" r="99.5" fill="#98D79E" />
-        </svg>
+<main style="background-color: #98d79e">
+  <div class="container-fluid home">
+    <h1 class="logo">Nyein Food & Beverage</h1>
+    <svg
+      width="109"
+      height="143"
+      viewBox="0 0 109 143"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="cycle-right"
+    >
+      <circle cx="99.5" cy="43.5" r="99.5" fill="#98D79E" />
+    </svg>
 
-        <svg
-          width="99"
-          height="96"
-          viewBox="0 0 99 96"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="tra-top"
-        >
-          <path
-            d="M33.4703 19.4338L98.9372 58.577L32.3048 95.7014L33.4703 19.4338Z"
-            fill="#98D79E"
-            fill-opacity="0.65"
-          />
-        </svg>
-        <svg
-          width="50"
-          height="50"
-          viewBox="0 0 99 96"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          class="tra-right"
-        >
-          <path
-            d="M33.4703 19.4338L98.9372 58.577L32.3048 95.7014L33.4703 19.4338Z"
-            fill="#98D79E"
-            fill-opacity="0.65"
-          />
-        </svg>
-        <div class="row">
-          <div class="col-md-6 p-0 m-0">
-            <div class="left">
-              <div class="hero">
-                
+    <svg
+      width="99"
+      height="96"
+      viewBox="0 0 99 96"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="tra-top"
+    >
+      <path
+        d="M33.4703 19.4338L98.9372 58.577L32.3048 95.7014L33.4703 19.4338Z"
+        fill="#98D79E"
+        fill-opacity="0.65"
+      />
+    </svg>
+    <svg
+      width="50"
+      height="50"
+      viewBox="0 0 99 96"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      class="tra-right"
+    >
+      <path
+        d="M33.4703 19.4338L98.9372 58.577L32.3048 95.7014L33.4703 19.4338Z"
+        fill="#98D79E"
+        fill-opacity="0.65"
+      />
+    </svg>
+    <div class="row">
+      <div class="col-md-6 p-0 m-0">
+        <div class="left">
+          <div class="hero">
+            <div
+              class="d-flex justify-content-around align-items-center px-3"
+              style="width: 100%"
+            >
+              <div class="row mt-5 mt-md-0">
+                <h2 class="text-center mb-3 chill">Just Order And Relax</h2>
                 <div
-                  class="d-flex justify-content-around align-items-center px-3"
-                  style="width: 100%;"
+                  class="
+                    col-12 col-md-6
+                    mb-4 mb-md-0
+                    d-flex
+                    justify-content-center
+                    align-items-center
+                  "
                 >
-                <div class="row mt-5 mt-md-0">
-                  <h2 class="text-center mb-3 chill">Just Order And Relax</h2>
-                  <div class="col-12 col-md-6 mb-4 mb-md-0 d-flex justify-content-center align-items-center">
                   <div class="order">
-                    <h5 class="py-3"><a href="{% url 'menu:menu' %}">Order</a></h5>
+                    <h5 class="py-3">
+                      <a href="{% url 'menu:menu' %}">Order</a>
+                    </h5>
                     <div class="order-img">
                       <img
                         src="{% static 'image/Delivery_Man_Giving_Parcel_Box_to_Customer__cartoon_art_illustration.jpg' %}"
@@ -64,10 +73,19 @@
                       />
                     </div>
                   </div>
-                  </div>
-                  <div class="col-12 col-md-6 d-flex justify-content-around align-items-center">
+                </div>
+                <div
+                  class="
+                    col-12 col-md-6
+                    d-flex
+                    justify-content-around
+                    align-items-center
+                  "
+                >
                   <div class="table-order">
-                    <h5 class="py-3"><a href="{% url 'menu:jointable' %}">Table</a></h5>
+                    <h5 class="py-3">
+                      <a href="{% url 'menu:jointable' %}">Table</a>
+                    </h5>
                     <div class="table-img">
                       <img
                         src="{% static 'image/Lovers_couple_eating_together_Happy_valentine_cartoon_character_illustration_Premium_Vector.jpg' %}"
@@ -75,23 +93,22 @@
                       />
                     </div>
                   </div>
-                  </div>
-
                 </div>
-                </div>
-               
               </div>
-            </div>
-          </div>
-          <div class="col-md-6 p-0 m-0">
-            <div class="right">
-              <img
-                src="{% static 'image/Food_delivery_man_riding_motorcycles_cartoon_art_illustration.jpg' %}"
-                alt=""
-                class="delivery"
-              />
             </div>
           </div>
         </div>
       </div>
-{% endblock %}
+      <div class="col-md-6 p-0 m-0">
+        <div class="right">
+          <img
+            src="{% static 'image/Food_delivery_man_riding_motorcycles_cartoon_art_illustration.jpg' %}"
+            alt=""
+            class="delivery"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+</main>

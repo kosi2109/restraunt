@@ -39,31 +39,6 @@
 
     {% if request.user.is_authenticated %}
     <script type="text/javascript">
-
-      var btn = document.getElementById("burger");
-      var cart = document.getElementById("cart");
-
-      active = localStorage.getItem('active')
-      if (active == 'active'){
-        cart.classList.add(active);
-      }else{
-        cart.classList.remove('active');
-      }
-      
-
-      btn.addEventListener("click", () => {
-        active = localStorage.getItem('active')
-        if (active == 'active'){
-          localStorage.setItem('active', 'unactive');
-          active = localStorage.getItem('active')
-          cart.classList.remove('active');
-        }else{
-          localStorage.setItem('active', 'active');
-          active = localStorage.getItem('active')
-          cart.classList.add(active);
-        }
-        
-      });
       
      var updateBtns = document.getElementsByClassName('add-btn')
 
@@ -102,21 +77,6 @@
       }
       
     </script>
-    {% else %}
-    <script type="text/javascript">
-      var btn = document.getElementById("burger");
-      var cart = document.getElementById("cart");
-
-      btn.addEventListener("click", () => {
-        window.alert('Create Account To Make An Order')
-      });
-     var updateBtns = document.getElementsByClassName('add-btn')
-
-      for (var i=0; i< updateBtns.length; i++){
-        updateBtns[i].addEventListener('click',function(){
-          window.alert('Create Account To Make An Order')
-        })
-      }
-    </script>
+    
     {% endif %}
 {% endblock %}

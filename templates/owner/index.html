@@ -1,130 +1,129 @@
-{% extends 'owner/base.html' %}
+{% extends 'owner/base.html' %} 
 {% block content %}
 <div class="row mb-3">
-            <div class="col-md-4 mb-3">
-              <div class="show-container bg-white shadow">
-                <h4>{{sales.daily}}Ks</h4>
-                <h5>Today</h5>
-              </div>
-            </div>
-            <div class="col-md-4 mb-3">
-              <div class="show-container bg-white shadow">
-                <h4>{{sales.month}}Ks</h4>
-                <h5>This Month</h5>
-              </div>
-            </div>
-            <div class="col-md-4 mb-3">
-              <div class="show-container bg-white shadow">
-                <h4>{{sales.year}}Ks</h4>
-                <h5>This Year</h5>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div
-                class="most-order bg-white shadow p-3 mb-5"
-                style="border-radius: 10px"
-              >
-                <h3>Most Ordered User</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Phone</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  	{% for i in most_order %}
-                    <tr>
-                      <th scope="row">{{forloop.counter}}</th>
-                      <td>{{i.F_Name}} {{i.L_Name}}</td>
-                      <td>{{i.phone}}</td>
-                      <td>{{i.get_total_spend}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div
-                class="most-order bg-white shadow p-3 mb-3"
-                style="border-radius: 10px"
-              >
-                <h3>Most Money Spent User</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Phone</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  	{% for i in most_spent %}
-                    <tr>
-                      <th scope="row">{{forloop.counter}}</th>
-                      <td>{{i.F_Name}} {{i.L_Name}}</td>
-                      <td>{{i.phone}}</td>
-                      <td>{{i.get_total_spend}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="most-order bg-white shadow p-3 mb-3">
-                <h3>Best Selling Item</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  	{% for i in most_order_item %}
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>{{i.name}}</td>
-                      <td>{{i.get_total_selling}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="most-order bg-white shadow p-3 mb-3">
-                <h3>Best Selling Category</h3>
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Name</th>
-                      <th scope="col">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  	{% for i in most_order_cate %}
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>{{i.name}}</td>
-                      <td>{{i.get_total_selling}}</td>
-                    </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            
-          </div>
+  <div class="col-md-4 mb-3">
+    <div class="show-container bg-white shadow">
+      <h4>{{sales.daily}}Ks</h4>
+      <h5>Today</h5>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="show-container bg-white shadow">
+      <h4>{{sales.month}}Ks</h4>
+      <h5>This Month</h5>
+    </div>
+  </div>
+  <div class="col-md-4 mb-3">
+    <div class="show-container bg-white shadow">
+      <h4>{{sales.year}}Ks</h4>
+      <h5>This Year</h5>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div
+      class="most-order bg-white shadow p-3 mb-5"
+      style="border-radius: 10px"
+    >
+      <h3>Most Ordered User</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in most_order %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{i.F_Name}} {{i.L_Name}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{i.get_total_spend}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div
+      class="most-order bg-white shadow p-3 mb-3"
+      style="border-radius: 10px"
+    >
+      <h3>Most Money Spent User</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in most_spent %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{i.F_Name}} {{i.L_Name}}</td>
+            <td>{{i.phone}}</td>
+            <td>{{i.get_total_spend}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-4">
+    <div class="most-order bg-white shadow p-3 mb-3">
+      <h3>Best Selling Item</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in most_order_item %}
+          <tr>
+            <th scope="row">1</th>
+            <td>{{i.name}}</td>
+            <td>{{i.get_total_selling}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="most-order bg-white shadow p-3 mb-3">
+      <h3>Best Selling Category</h3>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in most_order_cate %}
+          <tr>
+            <th scope="row">1</th>
+            <td>{{i.name}}</td>
+            <td>{{i.get_total_selling}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 {% endblock %}

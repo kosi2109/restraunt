@@ -422,8 +422,17 @@ body {
   height: 100%;
 }
 .quantity{
-  position: absolute;
-  right: -50%;
+    position: absolute;
+    right: -10px;
+    top: 15px;
+    background-color: #fafafa;
+    border-radius: 100%;
+    border: 1px solid green;
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
+    text-align: center;
+    user-select: none;
 }
 
 .menu-detail {
@@ -550,21 +559,7 @@ body {
 }
 
 .receipt{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  min-height: 50vh;
-  padding: 10px 20px;
-  background-color: var(--bg-secondary);
-  color: #252525;
-  border-radius: 10px;
-  box-shadow: 0.5px 0.5px 5px #252525;
+ width: 100%;
 }
 
 .receipt h3{
@@ -735,7 +730,7 @@ body {
 }
 
 @media screen and (min-width: 400px){
-  .order,.table{
+  .order,.table-order{
     width: 70%;
   }
 }
