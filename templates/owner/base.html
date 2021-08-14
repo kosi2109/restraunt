@@ -43,7 +43,7 @@
   <body class="bg-light position-relative">
     <div class="container-fluid hero p-0 m-0">
       <div class="row subhero p-0 m-0">
-        <div class="col-0 col-md-2 main-select p-0 m-0 bg-dark">
+        <div class="col-0 col-lg-2 main-select p-0 m-0 bg-dark">
           <div class="select">
             <ul class="nav-links">
               <li>
@@ -55,12 +55,38 @@
             </ul>
           </div>
         </div>
-        <div class="col-12 col-md-10 p-4">
+        <div class="col-12 col-lg-10 p-4">
+          <div class="mobile-nav bg-dark fixed-top">
+            <h3 ><a class="text-light" href="{% url 'menu:menu' %}" style="text-decoration:none;">Nyein</a></h3>
+            <div class="burger">
+              <div class="line1"></div>
+              <div class="line2"></div>
+            </div>
+            
+            <ul class="nav-links">
+              
+              <li><a  href="{% url 'chef:orderView' %}">Chef</a></li>
+              <li {% if nav == 'home' %} class="active" {% endif %}><a  href="{% url 'owner:home' %}">Home</a></li>
+              <li {% if nav == 'order' %} class="active" {% endif %}><a href="{% url 'owner:order' %}">Orders</a></li>
+              <li {% if nav == 'menu' %} class="active" {% endif %}><a href="{% url 'owner:menu' %}">Menu</a></li>
+            </ul>
+          </div>
           {% block content %}
 
           {% endblock %}
         </div>
       </div>
     </div>
+    <script type="text/javascript">
+      const btn = document.querySelector('.burger')
+      const nav = document.querySelector('.mobile-nav .nav-links')
+      const line1 = document.querySelector('.line1')
+      const line2 = document.querySelector('.line2')
+      btn.addEventListener('click',()=>{
+        nav.classList.toggle('navactive')
+        line1.classList.toggle('line1active')
+        line2.classList.toggle('line2active')
+      })
+    </script>
   </body>
 </html>
