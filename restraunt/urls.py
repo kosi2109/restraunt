@@ -24,6 +24,3 @@ urlpatterns = [
     path('chef/',include('chef.urls',namespace='chef')),
     path('owner/',include('owner.urls',namespace='owner')),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL , document_root=settings.MEDIA_ROOT)
