@@ -52,10 +52,7 @@
 
 
       function cookOrder(menuSlug,action){
-        console.log('sendind daata')
         var url = '{% url 'menu:handleOrder' %}'
-
-
         fetch(url , {
           method:'POST',
           headers:{

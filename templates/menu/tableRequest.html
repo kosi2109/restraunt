@@ -39,7 +39,7 @@
       }
     })
     .catch(function (e) {
-      console.error(e);
+      window.alert(e)
     });
 
   scanner.addListener("scan", function (content) {
@@ -47,8 +47,6 @@
     console.log(obj);
     const username = obj.username;
     const passwords = obj.password;
-    console.log(username);
-    console.log(passwords);
     const name = document.getElementById("username");
     const password = document.getElementById("password");
     if (content) {
