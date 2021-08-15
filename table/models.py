@@ -2,6 +2,7 @@ from django.db import models
 from menu.models import Menu,UserNew
 import uuid
 
+
 class Table(models.Model):
 	user = models.OneToOneField(UserNew,on_delete=models.CASCADE,related_name='table')
 	table_no = models.CharField(max_length=50,null=True)

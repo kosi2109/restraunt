@@ -4,6 +4,7 @@ from django.contrib.auth.models import User,AbstractUser,AbstractBaseUser,Permis
 from datetime import date
 from datetime import datetime
 from django.utils import timezone
+from cloudinary.models import CloudinaryField
 
 class UserNew(AbstractUser):
 	is_table = models.BooleanField(default=False)
@@ -37,7 +38,7 @@ class MUser(models.Model):
 		return f"{self.F_Name} {self.L_Name}"
 
 class Category(models.Model):
-	image = models.ImageField(upload_to='category/',default='category/category.png',blank=True)
+	image = CloudinaryField('image')
 	name = models.CharField(max_length=100,null=True)
 	slug = models.SlugField(null=True,blank=True,unique=True)
 
@@ -83,7 +84,7 @@ class Menu(models.Model):
 	size = models.CharField(max_length=20,choices= SIZE_CHOICE,blank=True)
 	price = models.IntegerField()
 	slug = models.SlugField(max_length=50,unique=True,null=True,blank=True)
-	image = models.ImageField(upload_to='menu/')
+	image = CloudinaryField('image')
 
 	def save(self,*args,**kwargs):
 		if not self.slug:
