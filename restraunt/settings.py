@@ -32,7 +32,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['nyein.herokuapp.com']
 
-
+cloudinary.config( 
+  cloud_name = "kosi1999", 
+  api_key = "224755967289515", 
+  api_secret = "8UWxcHFnDTvHC6dlbxapw9AWxYg" ,
+)
 # Application definition
 
 INSTALLED_APPS = [
