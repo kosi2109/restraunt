@@ -7,14 +7,16 @@ from owner.decorators import *
 from django.contrib.auth.decorators import login_required
 
 
-@chef
+
 @login_required(login_url='menu:login')
+@chef
 def orderView(request):
 	
 	return render(request,'chef/orderView.html')
 
-@chef
+
 @login_required(login_url='menu:login')
+@chef
 def getOrders(request):
 	total_orders = []
 
@@ -37,8 +39,9 @@ def getOrders(request):
 	data = {'data':total_orders}
 	return JsonResponse(data)
 
-@chef
+
 @login_required(login_url='menu:login')
+@chef
 def cookControl(request):
 	data = json.loads(request.body)
 	cook_id = data['cook_id']

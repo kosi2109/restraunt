@@ -28,6 +28,7 @@
                       <td>{{i.user.F_Name}} {{i.user.L_Name}}</td>
                       <td>{{i.user.phone}}</td>
                       <td>{{i.user.address}}</td>
+                      {% if i.status %}
                       <td>
                         <select class="form-control status" data-order='{{i.slug}}'>
                           
@@ -36,6 +37,7 @@
                           <option {% if i.status == "Delivered" %} disabled selected  {% endif %} value="Delivered">Delivered</option>
                         </select>
                       </td>
+                      {% endif %}
                     </tr>
               		{% endfor %}
                   </tbody>
