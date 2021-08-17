@@ -119,10 +119,10 @@
         {% for i in order_item %}
         <div class="ordered-item">
           <div class="ordered-img">
-            <button class="add-btn" data-action="increase" data-slug="{{i.id}}">
+            <button class="add-btn" data-action="increase" data-slug="{{i.slug}}">
               <img class="increase" src="{% static 'image/Up.png' %}" />
             </button>
-            <button class="add-btn" data-action="decrease" data-slug="{{i.id}}">
+            <button class="add-btn" data-action="decrease" data-slug="{{i.slug}}">
               <img class="increase" src="{% static 'image/Down.png' %}" />
             </button>
           </div>
@@ -156,10 +156,10 @@
       {% for i in cart_item %}
       <div class="ordered-item">
         <div class="ordered-img">
-          <button class="add-btn" data-action="increase" data-slug="{{i.id}}">
+          <button class="add-btn" data-action="increase" data-slug="{{i.slug}}">
             <img class="increase" src="{% static 'image/Up.png' %}" />
           </button>
-          <button class="add-btn" data-action="decrease" data-slug="{{i.id}}">
+          <button class="add-btn" data-action="decrease" data-slug="{{i.slug}}">
             <img class="increase" src="{% static 'image/Down.png' %}" />
           </button>
         </div>

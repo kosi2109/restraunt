@@ -84,10 +84,9 @@ def userLogout(request):
 def home(request):
 	return render(request , 'menu/index.html')
 
-def menu(request):
-	category = Category.objects.all()
-	menu = Menu.objects.all()
-	bestselling = BestMenu.get_best_item
+
+
+def getorder(request):
 	if request.user.is_authenticated:
 		if request.user.is_user:
 			user = request.user.muser
@@ -134,8 +133,20 @@ def menu(request):
 		order_item = []
 		cart_item = []
 
-	
+	ctx = {'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
+	return ctx
 
+
+
+
+def menu(request):
+	category = Category.objects.all()
+	menu = Menu.objects.all()
+	bestselling = BestMenu.get_best_item
+	cx = getorder(request)
+	order_item = cx['order_item']
+	current_order = cx['current_order']
+	cart_item = cx['cart_item']
 	ctx = {'menu':menu,'bestselling':bestselling,'category':category,'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
 	return render(request,'menu/menu.html',ctx)
 
@@ -143,55 +154,60 @@ def category(request,slug):
 	category = Category.objects.all()
 	ct = Category.objects.get(slug=slug)
 	menu = Menu.objects.filter(category=ct)
-	if request.user.is_authenticated:
-		if request.user.is_user:
-			user = request.user.muser
-			order = list(user.order_set.all())
-			if len(order) > 0:
-				last_order = order[-1]
-				if last_order.ckecked == False:
-					current_order = last_order
-					order_item = current_order.orderitem_set.all()
-					cart_item = []
-				else:
-					current_order = None
-					order_item = []
-					cart_item = []
-			else:
-				current_order = None
-				order_item = []
-				cart_item = []
-		elif request.user.is_table:
-			user = request.user.table
-			order = list(user.tableorder_set.all())
-			if len(order) > 0:
-				last_order = order[-1]
-				if last_order.ckecked == False:
-					current_order = last_order
-					order_item = current_order.tableorderitem_set.filter(ordered=True)
-					cart_item = current_order.tableorderitem_set.filter(ordered=False)
-				else:
-					current_order = None
-					order_item = []
-					cart_item = []
-			else:
-				current_order = None
-				order_item = []
-				cart_item = []
-		else:
-				current_order = None
-				order_item = []
-				cart_item = []
-	else:
-		order = []
-		current_order = None
-		order_item = []
-		cart_item = []
-
+	cx = getorder(request)
+	order_item = cx['order_item']
+	current_order = cx['current_order']
+	cart_item = cx['cart_item']
 	ctx = {'menu':menu,'category':category,'order_item':order_item,'current_order':current_order,'cart_item':cart_item}
 	return render(request , 'menu/category.html',ctx)
 
 
+
+def add_to_cart(request,menuSlug,last_order):
+	if request.user.is_authenticated:
+		if request.user.is_user:
+	
+			item = Menu.objects.get(slug=menuSlug)
+							
+			if last_order.ckecked == False:
+								
+				if OrderItem.objects.filter(order=last_order,item=item).exists():
+					ordered_item = OrderItem.objects.get(order=last_order,item=item)
+					ordered_item.quatity += 1
+					ordered_item.save()
+				else:
+					OrderItem.objects.create(order=last_order,item=item)
+			else:
+				new = Order.objects.create(user=user)
+				OrderItem.objects.create(order=new,item=item)
+		elif request.user.is_table:
+
+			item = Menu.objects.get(slug=menuSlug)
+			if last_order.ckecked == False:
+				if TableOrderItem.objects.filter(order=last_order,item=item,ordered=False).exists():
+					ordered_item = TableOrderItem.objects.get(order=last_order,item=item,ordered=False)
+					ordered_item.quatity += 1
+					ordered_item.save()
+				else:
+					TableOrderItem.objects.create(order=last_order,item=item)
+			else:
+				new = TableOrder.objects.create(user=user)
+				TableOrderItem.objects.create(order=new,item=item)
+
+def increse_decrese(action,data,typeO):
+	if action == 'increase':
+		menuSlug = data['menuSlug']
+		item = typeO.objects.get(slug=menuSlug)
+		item.quatity += 1
+		item.save()
+
+	if action == 'decrease':
+		menuSlug = data['menuSlug']
+		item = typeO.objects.get(slug=menuSlug)
+		item.quatity -= 1
+		item.save()
+		if item.quatity < 1:
+			item.delete()
 
 def handleOrder(request):
 	if request.user.is_authenticated:
@@ -204,34 +220,12 @@ def handleOrder(request):
 				last_order = order[-1]
 				if action == 'add':
 					menuSlug = data['menuSlug']
-					item = Menu.objects.get(slug=menuSlug)
-					print(last_order.ckecked)
-					if last_order.ckecked == False:
-						print('Not checked')
-						if OrderItem.objects.filter(order=last_order,item=item).exists():
-							ordered_item = OrderItem.objects.get(order=last_order,item=item)
-							ordered_item.quatity += 1
-							ordered_item.save()
-						else:
-							OrderItem.objects.create(order=last_order,item=item)
-					else:
-						print('checked')
-						new = Order.objects.create(user=user)
-						OrderItem.objects.create(order=new,item=item)
+					add_to_cart(request,menuSlug,last_order)
 
 				if action == 'increase':
-					menuSlug = data['menuSlug']
-					item = OrderItem.objects.get(id=menuSlug)
-					item.quatity += 1
-					item.save()
-
+					increse_decrese(action,data,OrderItem)
 				if action == 'decrease':
-					menuSlug = data['menuSlug']
-					item = OrderItem.objects.get(id=menuSlug)
-					item.quatity -= 1
-					item.save()
-					if item.quatity < 1:
-						item.delete()
+					increse_decrese(action,data,OrderItem)
 					
 			else:
 				menuSlug = data['menuSlug']
@@ -250,36 +244,17 @@ def handleOrder(request):
 				last_order = order[-1]
 				if action == 'add':
 					menuSlug = data['menuSlug']
-					item = Menu.objects.get(slug=menuSlug)
-					if last_order.ckecked == False:
-						if TableOrderItem.objects.filter(order=last_order,item=item,ordered=False).exists():
-							ordered_item = TableOrderItem.objects.get(order=last_order,item=item,ordered=False)
-							ordered_item.quatity += 1
-							ordered_item.save()
-						else:
-							TableOrderItem.objects.create(order=last_order,item=item)
-					else:
-						new = TableOrder.objects.create(user=user)
-						TableOrderItem.objects.create(order=new,item=item)
+					add_to_cart(request,menuSlug,last_order)
+
 				if action == 'comfirm':
 					not_ordered = TableOrderItem.objects.filter(order=last_order,ordered=False)
 					for i in not_ordered:
 						i.ordered = True
 						i.save()		
-
 				if action == 'increase':
-					menuSlug = data['menuSlug']
-					item = TableOrderItem.objects.get(id=menuSlug)
-					item.quatity += 1
-					item.save()
-
+					increse_decrese(action,data,TableOrderItem)
 				if action == 'decrease':
-					menuSlug = data['menuSlug']
-					item = TableOrderItem.objects.get(id=menuSlug)
-					item.quatity -= 1
-					item.save()
-					if item.quatity < 1:
-						item.delete()
+					increse_decrese(action,data,TableOrderItem)
 
 			else:
 				new = TableOrder.objects.create(user=user)
@@ -305,7 +280,7 @@ def checkout(request,slug):
 	elif request.user.is_table:
 		user = request.user.table
 		order = TableOrder.objects.get(user=user,slug=slug)
-		item = order.tableorderitem_set.filter(ordered=True,cooked=True)
+		item = order.tableorderitem_set.filter(ordered=True)
 		not_order = order.tableorderitem_set.filter(ordered=False)
 		if request.method == 'POST':
 			for i in not_order:
@@ -328,50 +303,10 @@ def search(request):
 	category = Category.objects.all()
 	menu = Menu.objects.all()
 	
-	if request.user.is_authenticated:
-		if request.user.is_user:
-			user = request.user.muser
-			order = list(user.order_set.all())
-			if len(order) > 0:
-				last_order = order[-1]
-				if last_order.ckecked == False:
-					current_order = last_order
-					order_item = current_order.orderitem_set.all()
-					cart_item = []
-				else:
-					current_order = None
-					order_item = []
-					cart_item = []
-			else:
-				current_order = None
-				order_item = []
-				cart_item = []
-		elif request.user.is_table:
-			user = request.user.table
-			order = list(user.tableorder_set.all())
-			if len(order) > 0:
-				last_order = order[-1]
-				if last_order.ckecked == False:
-					current_order = last_order
-					order_item = current_order.tableorderitem_set.filter(ordered=True)
-					cart_item = current_order.tableorderitem_set.filter(ordered=False)
-				else:
-					current_order = None
-					order_item = []
-					cart_item = []
-			else:
-				current_order = None
-				order_item = []
-				cart_item = []
-		else:
-			current_order = None
-			order_item = []
-			cart_item = []
-	else:
-		order = []
-		current_order = None
-		order_item = []
-		cart_item = []
+	cx = getorder(request)
+	order_item = cx['order_item']
+	current_order = cx['current_order']
+	cart_item = cx['cart_item']
 
 	if request.method == "POST":
 		data = request.POST['searched']
@@ -419,3 +354,6 @@ def handlestatus(request):
 			order_item = current_order.tableorderitem_set.filter(ordered=True)
 			data = list(order_item.values())
 			return JsonResponse(data,safe=False)
+	else:
+		data = []
+		return JsonResponse(data,safe=False)
