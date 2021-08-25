@@ -166,6 +166,7 @@ def category(request,slug):
 def add_to_cart(request,menuSlug,last_order):
 	if request.user.is_authenticated:
 		if request.user.is_user:
+			user = request.user.muser
 	
 			item = Menu.objects.get(slug=menuSlug)
 							
